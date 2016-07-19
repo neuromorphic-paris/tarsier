@@ -34,4 +34,4 @@ To test the library, run the following commands:
 
 # User guides and documentation
 
-User guides and code documentation are held in the [wiki](https://github.com/aMarcireau/tarsier/wiki).
+User guides and code documentation are held in the [wiki](https://github.com/neuromorphic-paris/tarsier/wiki).
