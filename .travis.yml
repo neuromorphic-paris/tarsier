@@ -1,0 +1,41 @@
+language: cpp
+
+matrix:
+    include:
+        - os: linux
+          dist: trusty
+          sudo: required
+          compiler: gcc
+        - os: osx
+          osx_image: xcode7.3
+          compiler: gcc
+        - os: osx
+          osx_image: xcode7.3
+          compiler: clang
+
+before_install:
+    - |
+        if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+            brew update
+            brew install premake
+        fi
+    - |
+        if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+            sudo apt-get -qq update -y
+            sudo apt-get install premake4 -y
+            sudo ln -s /usr/bin/make /usr/bin/gmake
+        fi
+
+before_script:
+    - premake4 install
+    - premake4 gmake
+
+script:
+    - cd build
+    - make
+    - cd Release
+    - ./tarsierTest
+    - cd ../..
+
+after_script:
+    - premake4 uninstall
