@@ -31,7 +31,7 @@ namespace tarsier {
             /// trigger loops over the members of a tuple.
             template<std::size_t Index = 0, typename ...Tuple>
             static typename std::enable_if<Index == sizeof...(Tuple), void>::type
-            trigger(std::tuple<Tuple...>&, Event& event) {}
+            trigger(std::tuple<Tuple...>&, Event&) {}
             template<std::size_t Index = 0, typename ...Tuple>
             static typename std::enable_if<Index<sizeof...(Tuple), void>::type
             trigger(std::tuple<Tuple...>& tuple, Event& event) {
