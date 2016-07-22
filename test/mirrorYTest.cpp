@@ -6,7 +6,7 @@ struct Event {
     std::size_t y;
 };
 
-TEST_CASE("Invert the y coordinate", "[mirrorY]") {
+TEST_CASE("Invert the y coordinate", "[MirrorY]") {
     auto mirrorY = tarsier::make_mirrorY<Event>(240, [](Event event) -> void {
         REQUIRE(event.y == 100);
     });

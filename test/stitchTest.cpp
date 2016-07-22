@@ -15,7 +15,7 @@ struct Event {
     uint64_t timeDelta;
 };
 
-TEST_CASE("Stitch an threshold crossings stream", "[stitch]") {
+TEST_CASE("Stitch an threshold crossings stream", "[Stitch]") {
     auto stitch = tarsier::make_stitch<ThresholdCrossing, Event>(
         std::make_pair(304, 240),
         [](const ThresholdCrossing& secondThresholdCrossing, uint64_t timeDelta) -> Event {

@@ -7,7 +7,7 @@ struct Event {
     std::size_t y;
 };
 
-TEST_CASE("Filter out events outside the disk", "[maskDisk]") {
+TEST_CASE("Filter out events outside the disk", "[MaskDisk]") {
     auto maskDisk = tarsier::make_maskDisk<Event>(std::make_pair(100, 100), 20.0, [](Event event) -> void {
         REQUIRE(event.x == 100);
     });

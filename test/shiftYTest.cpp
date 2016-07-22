@@ -6,7 +6,7 @@ struct Event {
     std::size_t y;
 };
 
-TEST_CASE("Shift the y coordinate", "[shiftY]") {
+TEST_CASE("Shift the y coordinate", "[ShiftY]") {
     auto shiftY = tarsier::make_shiftY<Event>(240, -10, [](Event event) -> void {
         REQUIRE(event.y == 0);
     });
