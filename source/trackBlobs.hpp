@@ -7,6 +7,7 @@
 #include <vector>
 #include <array>
 #include <stdexcept>
+#include <algorithm>
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
@@ -18,33 +19,6 @@ namespace tarsier {
         double squaredSigmaX;
         double sigmaXY;
         double squaredSigmaY;
-    };
-
-    /// Ellipse represents the parameters of an ellipse.
-    class Ellipse {
-        public:
-            Ellipse(const Blob& blob, double confidence = 3) :
-                angle(std::atan(2 * blob.sigmaXY / (blob.squaredSigmaY - blob.squaredSigmaX)) / 2)
-            {
-                const auto deltaSquareRoot = std::sqrt(std::pow(blob.squaredSigmaY - blob.squaredSigmaX, 2) + 4 * std::pow(blob.sigmaXY, 2)) / 2;
-                const auto firstOrderCoefficient = blob.squaredSigmaY + blob.squaredSigmaX / 2;
-                a = firstOrderCoefficient + deltaSquareRoot;
-                b = firstOrderCoefficient - deltaSquareRoot;
-            }
-            Ellipse(const Ellipse&) = default;
-            Ellipse(Ellipse&&) = default;
-            Ellipse& operator=(const Ellipse&) = default;
-            Ellipse& operator=(Ellipse&&) = default;
-            virtual ~Ellipse() {}
-
-            /// a is the major radius.
-            double a;
-
-            /// b is the minor radius.
-            double b;
-
-            /// angle is the angle between the horizontal axis and the major axis.
-            double angle;
     };
 
     /// TrackBlobs tracks the incoming events with a static set of blobs.
