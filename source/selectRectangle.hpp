@@ -11,7 +11,7 @@ namespace tarsier {
         public:
             SelectRectangle(std::size_t left, std::size_t bottom, std::size_t width, std::size_t height, HandleEvent handleEvent) :
                 _left(left),
-                _bottom(top),
+                _bottom(bottom),
                 _right(left + width),
                 _top(bottom + height),
                 _handleEvent(std::forward<HandleEvent>(handleEvent))

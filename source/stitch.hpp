@@ -57,12 +57,14 @@ namespace tarsier {
     /// make_stitch creates a Stitch from functors.
     template <typename ThresholdCrossing, typename Event, typename EventFromThresholdCrossing, typename HandleEvent>
     Stitch<ThresholdCrossing, Event, EventFromThresholdCrossing, HandleEvent> make_stitch(
-        std::pair<std::size_t, std::size_t> size,
+        std::size_t width,
+        std::size_t height,
         EventFromThresholdCrossing eventFromThresholdCrossing,
         HandleEvent handleEvent
     ) {
         return Stitch<ThresholdCrossing, Event, EventFromThresholdCrossing, HandleEvent>(
-            std::move(size),
+            width,
+            height,
             std::forward<EventFromThresholdCrossing>(eventFromThresholdCrossing),
             std::forward<HandleEvent>(handleEvent)
         );
