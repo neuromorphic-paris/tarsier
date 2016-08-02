@@ -27,7 +27,7 @@ namespace tarsier {
             }
 
         protected:
-            std::size_t _width;
+            const std::size_t _width;
             HandleEvent _handleEvent;
     };
 

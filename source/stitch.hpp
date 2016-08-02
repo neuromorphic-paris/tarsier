@@ -13,11 +13,11 @@ namespace tarsier {
     template <typename ThresholdCrossing, typename Event, typename EventFromThresholdCrossing, typename HandleEvent>
     class Stitch {
         public:
-            Stitch(std::pair<std::size_t, std::size_t> size, EventFromThresholdCrossing eventFromThresholdCrossing, HandleEvent handleEvent) :
-                _width(size.first),
+            Stitch(std::size_t width, std::size_t height, EventFromThresholdCrossing eventFromThresholdCrossing, HandleEvent handleEvent) :
+                _width(width),
                 _eventFromThresholdCrossing(std::forward<EventFromThresholdCrossing>(eventFromThresholdCrossing)),
                 _handleEvent(std::forward<HandleEvent>(handleEvent)),
-                _areTriggeredAndTimestamps(size.first * size.second)
+                _areTriggeredAndTimestamps(width * height)
             {
             }
             Stitch(const Stitch&) = delete;
@@ -48,7 +48,7 @@ namespace tarsier {
             }
 
         protected:
-            std::size_t _width;
+            const std::size_t _width;
             EventFromThresholdCrossing _eventFromThresholdCrossing;
             HandleEvent _handleEvent;
             std::vector<std::pair<bool, int64_t>> _areTriggeredAndTimestamps;
