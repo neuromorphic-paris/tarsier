@@ -19,32 +19,33 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
             tarsier::Blob{75, 25, 70, 0, 70},
             tarsier::Blob{25, 75, 70, 0, 70},
             tarsier::Blob{75, 75, 70, 0, 70},
-        },    // initialBlobs
-        0,    // initialTimestamp
-        1e3,  // activityDecay
-        0,    // minimumProbability
+        },
+           0, // initialTimestamp
+         1e3, // activityDecay
+           0, // minimumProbability
         0.38, // promotionActivity
-        0.2,  // deletionActivity
-        0.9,  // meanInertia
-        0.9,  // covarianceInertia
-        0.2,  // repulsionStrength
-        10,   // repulsionLength
-        0.2,  // attractionStrength
-        30,   // attractionResetDistance
+         0.2, // deletionActivity
+         0.9, // meanInertia
+         0.9, // covarianceInertia
+         0.2, // repulsionStrength
+          10, // repulsionLength
+         0.2, // attractionStrength
+          30, // attractionResetDistance
         1000, // pairwiseCalculationsToSkip
-        [&promotedStep](std::size_t id, tarsier::Blob blob) {
+           0, // eventsToInhibit
+        [&promotedStep](std::size_t id, const tarsier::Blob& blob) {
             REQUIRE(id == 0);
             promotedStep = true;
         },
-        [&updatedStep](std::size_t id, tarsier::Blob blob) {
+        [&updatedStep](std::size_t id, const tarsier::Blob& blob) {
             REQUIRE(id == 0);
             updatedStep = true;
         },
-        [&demotedStep](std::size_t id, tarsier::Blob blob) {
+        [&demotedStep](std::size_t id, const tarsier::Blob& blob) {
             REQUIRE(id == 0);
             demotedStep = true;
         },
-        [&deletedStep](std::size_t id, tarsier::Blob blob) {
+        [&deletedStep](std::size_t id, const tarsier::Blob& blob) {
             REQUIRE(id == 0);
             deletedStep = true;
         }
