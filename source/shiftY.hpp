@@ -32,8 +32,8 @@ namespace tarsier {
             }
 
         protected:
-            std::size_t _height;
-            int64_t _shift;
+            const std::size_t _height;
+            const int64_t _shift;
             HandleEvent _handleEvent;
     };
 
