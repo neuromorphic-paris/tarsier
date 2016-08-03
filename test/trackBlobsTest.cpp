@@ -13,6 +13,11 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
     auto updatedStep = false;
     auto demotedStep = false;
     auto deletedStep = false;
+    auto hiddenPromotedStep = false;
+    auto hiddenUpdatedStep = false;
+    auto hiddenDemotedStep = false;
+    auto hiddenDeletedStep = false;
+
     auto trackBlobs = tarsier::make_trackBlobs<Event>(
         {
             tarsier::Blob{25, 25, 70, 0, 70},
@@ -32,22 +37,33 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
          0.2, // attractionStrength
           30, // attractionResetDistance
         1000, // pairwiseCalculationsToSkip
-           0, // eventsToInhibit
         [&promotedStep](std::size_t id, const tarsier::Blob& blob) {
-            REQUIRE(id == 0);
+            REQUIRE(id == 4);
             promotedStep = true;
         },
         [&updatedStep](std::size_t id, const tarsier::Blob& blob) {
-            REQUIRE(id == 0);
+            REQUIRE(id == 4);
             updatedStep = true;
         },
         [&demotedStep](std::size_t id, const tarsier::Blob& blob) {
-            REQUIRE(id == 0);
+            REQUIRE(id == 4);
             demotedStep = true;
         },
         [&deletedStep](std::size_t id, const tarsier::Blob& blob) {
-            REQUIRE(id == 0);
+            REQUIRE(id == 4);
             deletedStep = true;
+        },
+        [&hiddenPromotedStep](std::size_t id, const tarsier::Blob& blob) {
+            hiddenPromotedStep = true;
+        },
+        [&hiddenUpdatedStep](std::size_t id, const tarsier::Blob& blob) {
+            hiddenUpdatedStep = true;
+        },
+        [&hiddenDemotedStep](std::size_t id, const tarsier::Blob& blob) {
+            hiddenDemotedStep = true;
+        },
+        [&hiddenDeletedStep](std::size_t id, const tarsier::Blob& blob) {
+            hiddenDeletedStep = true;
         }
     );
 
