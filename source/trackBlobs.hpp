@@ -14,14 +14,24 @@ namespace tarsier {
 
     /// Blob represents a tracked gaussian blob.
     struct Blob {
+
+        /// x is the gaussian blob center's x coordinate.
         double x;
+
+        /// y is the gaussian blob center's y coordinate.
         double y;
+
+        /// squaredSigmaX is the variance along the x axis.
         double squaredSigmaX;
+
+        /// sigmaXY is the covariance of the x and y axis.
         double sigmaXY;
+
+        /// squaredSigmaY is the variance along the y axis.
         double squaredSigmaY;
     };
 
-    /// TrackBlobs tracks the incoming events with a static set of blobs.
+    /// TrackBlobs tracks the incoming events with gaussian blobs.
     /// HandlePromotedBlob must have the signature:
     ///     handlePromotedBlob(std::size_t id, const Blob& blob) -> void
     /// HandleUpdatedBlob must have the signature:
@@ -33,11 +43,10 @@ namespace tarsier {
         typename HandlePromotedBlob,
         typename HandleUpdatedBlob,
         typename HandleDemotedBlob,
-        typename HandleDeletedBlob,
         typename HandlePromotedHiddenBlob,
         typename HandleUpdatedHiddenBlob,
         typename HandleDemotedHiddenBlob,
-        typename HandleDeletedHiddenBlob
+        typename HandleDeletedBlob
     >
     class TrackBlobs {
         public:
@@ -58,11 +67,10 @@ namespace tarsier {
                 HandlePromotedBlob handlePromotedBlob,
                 HandleUpdatedBlob handleUpdatedBlob,
                 HandleDemotedBlob handleDemotedBlob,
-                HandleDeletedBlob handleDeletedBlob,
                 HandlePromotedHiddenBlob handlePromotedHiddenBlob,
                 HandleUpdatedHiddenBlob handleUpdatedHiddenBlob,
                 HandleDemotedHiddenBlob handleDemotedHiddenBlob,
-                HandleDeletedHiddenBlob handleDeletedHiddenBlob
+                HandleHiddenBlob handleHiddenBlob
             ) :
                 _initialBlobs(std::move(initialBlobs)),
                 _activityDecay(activityDecay),
@@ -79,11 +87,10 @@ namespace tarsier {
                 _handlePromotedBlob(std::forward<HandlePromotedBlob>(handlePromotedBlob)),
                 _handleUpdatedBlob(std::forward<HandleUpdatedBlob>(handleUpdatedBlob)),
                 _handleDemotedBlob(std::forward<HandleDemotedBlob>(handleDemotedBlob)),
-                _handleDeletedBlob(std::forward<HandleDeletedBlob>(handleDeletedBlob)),
                 _handlePromotedHiddenBlob(std::forward<HandlePromotedHiddenBlob>(handlePromotedHiddenBlob)),
                 _handleUpdatedHiddenBlob(std::forward<HandleUpdatedHiddenBlob>(handleUpdatedHiddenBlob)),
                 _handleDemotedHiddenBlob(std::forward<HandleDemotedHiddenBlob>(handleDemotedHiddenBlob)),
-                _handleDeletedHiddenBlob(std::forward<HandleDeletedHiddenBlob>(handleDeletedHiddenBlob)),
+                _handleDeletedBlob(std::forward<HandleDeletedBlob>(handleDeletedBlob)),
                 _previousTimestamp(initialTimestamp),
                 _skippedEvents(0),
                 _inhibitedEvents(0),
@@ -173,7 +180,6 @@ namespace tarsier {
                                 if (dataIterator->activity <= _promotionActivity) {
                                     if (dataIterator->activity <= _deletionActivity) {
                                         _handleDeletedBlob(dataIterator->id, dataIterator->blob);
-                                        _handleDeletedHiddenBlob(dataIterator->id, dataIterator->blob);
                                         dataIterator = _datum.erase(dataIterator);
                                     } else {
                                         _handleDemotedBlob(dataIterator->id, dataIterator->blob);
@@ -189,7 +195,6 @@ namespace tarsier {
                             case Status::demoted:
                                 if (dataIterator->activity <= _deletionActivity) {
                                     _handleDeletedBlob(dataIterator->id, dataIterator->blob);
-                                    _handleDeletedHiddenBlob(dataIterator->id, dataIterator->blob);
                                     dataIterator = _datum.erase(dataIterator);
                                 } else if (dataIterator->activity > _promotionActivity) {
                                     _handlePromotedBlob(dataIterator->id, dataIterator->blob);
@@ -304,11 +309,10 @@ namespace tarsier {
             HandlePromotedBlob _handlePromotedBlob;
             HandleUpdatedBlob _handleUpdatedBlob;
             HandleDemotedBlob _handleDemotedBlob;
-            HandleDeletedBlob _handleDeletedBlob;
             HandlePromotedHiddenBlob _handlePromotedHiddenBlob;
             HandleUpdatedHiddenBlob _handleUpdatedHiddenBlob;
             HandleDemotedHiddenBlob _handleDemotedHiddenBlob;
-            HandleDeletedHiddenBlob _handleDeletedHiddenBlob;
+            HandleDeletedBlob _handleDeletedBlob;
             int64_t _previousTimestamp;
             std::size_t _skippedEvents;
             std::size_t _inhibitedEvents;
@@ -322,22 +326,20 @@ namespace tarsier {
         typename HandlePromotedBlob,
         typename HandleUpdatedBlob,
         typename HandleDemotedBlob,
-        typename HandleDeletedBlob,
         typename HandlePromotedHiddenBlob,
         typename HandleUpdatedHiddenBlob,
         typename HandleDemotedHiddenBlob,
-        typename HandleDeletedHiddenBlob
+        typename HandleDeletedBlob
     >
     TrackBlobs<
         Event,
         HandlePromotedBlob,
         HandleUpdatedBlob,
         HandleDemotedBlob,
-        HandleDeletedBlob,
         HandlePromotedHiddenBlob,
         HandleUpdatedHiddenBlob,
         HandleDemotedHiddenBlob,
-        HandleDeletedHiddenBlob
+        HandleDeletedBlob
     > make_trackBlobs(
         std::vector<Blob> initialBlobs,
         int64_t initialTimestamp,
@@ -355,22 +357,20 @@ namespace tarsier {
         HandlePromotedBlob handlePromotedBlob,
         HandleUpdatedBlob handleUpdatedBlob,
         HandleDemotedBlob handleDemotedBlob,
-        HandleDeletedBlob handleDeletedBlob,
         HandlePromotedHiddenBlob handlePromotedHiddenBlob,
         HandleUpdatedHiddenBlob handleUpdatedHiddenBlob,
         HandleDemotedHiddenBlob handleDemotedHiddenBlob,
-        HandleDeletedHiddenBlob handleDeletedHiddenBlob
+        HandleDeletedBlob handleDeletedBlob
     ) {
         return TrackBlobs<
             Event,
             HandlePromotedBlob,
             HandleUpdatedBlob,
             HandleDemotedBlob,
-            HandleDeletedBlob,
             HandlePromotedHiddenBlob,
             HandleUpdatedHiddenBlob,
             HandleDemotedHiddenBlob,
-            HandleDeletedHiddenBlob
+            HandleDeletedBlob
         >(
             std::move(initialBlobs),
             initialTimestamp,
@@ -388,11 +388,10 @@ namespace tarsier {
             std::forward<HandlePromotedBlob>(handlePromotedBlob),
             std::forward<HandleUpdatedBlob>(handleUpdatedBlob),
             std::forward<HandleDemotedBlob>(handleDemotedBlob),
-            std::forward<HandleDeletedBlob>(handleDeletedBlob),
             std::forward<HandlePromotedHiddenBlob>(handlePromotedHiddenBlob),
             std::forward<HandleUpdatedHiddenBlob>(handleUpdatedHiddenBlob),
             std::forward<HandleDemotedHiddenBlob>(handleDemotedHiddenBlob),
-            std::forward<HandleDeletedHiddenBlob>(handleDeletedHiddenBlob)
+            std::forward<HandleDeletedBlob>(handleDeletedBlob)
         );
     }
 }
