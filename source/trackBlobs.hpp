@@ -70,7 +70,7 @@ namespace tarsier {
                 HandlePromotedHiddenBlob handlePromotedHiddenBlob,
                 HandleUpdatedHiddenBlob handleUpdatedHiddenBlob,
                 HandleDemotedHiddenBlob handleDemotedHiddenBlob,
-                HandleHiddenBlob handleHiddenBlob
+                HandleDeletedBlob handleDeletedBlob
             ) :
                 _initialBlobs(std::move(initialBlobs)),
                 _activityDecay(activityDecay),
