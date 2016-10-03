@@ -65,7 +65,7 @@ solution 'tarsier'
             postbuildcommands {
                 'rm -rf ' .. path.join(prefix, 'include/tarsier'),
                 'mkdir ' .. path.join(prefix, 'include/tarsier'),
-                'cp -r ../source/ ' ..  path.join(prefix, 'include/tarsier/'),
+                'cp -r ../source/* ' ..  path.join(prefix, 'include/tarsier/'),
             }
 
         -- Mac OS X specific settings
@@ -75,5 +75,5 @@ solution 'tarsier'
             postbuildcommands {
                 'rm -rf ' .. path.join(prefix, 'include/tarsier'),
                 'mkdir ' .. path.join(prefix, 'include/tarsier'),
-                'cp -r ../source/ ' ..  path.join(prefix, 'include/tarsier/'),
+                'cp -r ../source/* ' ..  path.join(prefix, 'include/tarsier/'),
             }
