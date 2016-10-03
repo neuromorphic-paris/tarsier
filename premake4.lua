@@ -25,7 +25,7 @@ solution 'tarsier'
         execute = function ()
             os.execute('rm -rf ' .. path.join(prefix, 'include/tarsier'))
             os.execute('mkdir ' .. path.join(prefix, 'include/tarsier'))
-            os.execute('cp -r source/ ' ..  path.join(prefix, 'include/tarsier/'))
+            os.execute('cp -r source/ ' ..  path.join(prefix, 'include/tarsier'))
             print(string.char(27) .. '[32mTarsier library installed.' .. string.char(27) .. '[0m')
             os.exit()
         end
