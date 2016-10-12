@@ -31,10 +31,10 @@ namespace tarsier {
                 const auto index = event.x + event.y * _width;
                 _timestamps[index] = event.timestamp + _decay;
                 if (
-                    event.x > 0 && _timestamps[index - 1] > event.timestamp
-                    || event.x < _width - 1 && _timestamps[index + 1] > event.timestamp
-                    || event.y > 0 && _timestamps[index - _width] > event.timestamp
-                    || event.y < _height - 1 && _timestamps[index + _width] > event.timestamp
+                    (event.x > 0 && _timestamps[index - 1] > event.timestamp)
+                    || (event.x < _width - 1 && _timestamps[index + 1] > event.timestamp)
+                    || (event.y > 0 && _timestamps[index - _width] > event.timestamp)
+                    || (event.y < _height - 1 && _timestamps[index + _width] > event.timestamp)
                 ) {
                     _handleEvent(event);
                 }
