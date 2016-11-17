@@ -13,7 +13,7 @@ namespace tarsier {
             SelectDisk(double centerX, double centerY, double radius, HandleEvent handleEvent) :
                 _centerX(centerX),
                 _centerY(centerY),
-                _squaredRadius(radius * radius),
+                _squaredRadius(std::pow(radius, 2)),
                 _handleEvent(std::forward<HandleEvent>(handleEvent))
             {
             }
