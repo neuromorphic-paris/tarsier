@@ -26,7 +26,7 @@ namespace tarsier {
             /// operator() handles an event.
             virtual void operator()(Event event) {
                 if (std::pow(static_cast<double>(event.x) - _centerX, 2) + std::pow(static_cast<double>(event.y) - _centerY, 2) < _squaredRadius) {
-                    _handleEvent(event);
+                    _handleEvent(std::move(event));
                 }
             }
 

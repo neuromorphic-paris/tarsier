@@ -36,7 +36,7 @@ namespace tarsier {
                     || (event.y > 0 && _timestamps[index - _width] > event.timestamp)
                     || (event.y < _height - 1 && _timestamps[index + _width] > event.timestamp)
                 ) {
-                    _handleEvent(event);
+                    _handleEvent(std::move(event));
                 }
             }
 
