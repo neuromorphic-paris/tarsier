@@ -26,7 +26,7 @@ namespace tarsier {
             /// operator() handles an event.
             virtual void operator()(Event event) {
                 if (event.x >= _left && event.x < _right && event.y >= _bottom && event.y < _top) {
-                    _handleEvent(event);
+                    _handleEvent(std::move(event));
                 }
             }
 
