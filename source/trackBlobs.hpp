@@ -52,7 +52,6 @@ namespace tarsier {
         public:
             TrackBlobs(
                 std::vector<Blob> initialBlobs,
-                int64_t initialTimestamp,
                 double activityDecay,
                 double minimumProbability,
                 double promotionActivity,
@@ -91,7 +90,7 @@ namespace tarsier {
                 _handleUpdatedHiddenBlob(std::forward<HandleUpdatedHiddenBlob>(handleUpdatedHiddenBlob)),
                 _handleDemotedHiddenBlob(std::forward<HandleDemotedHiddenBlob>(handleDemotedHiddenBlob)),
                 _handleDeletedBlob(std::forward<HandleDeletedBlob>(handleDeletedBlob)),
-                _previousTimestamp(initialTimestamp),
+                _previousTimestamp(0),
                 _skippedEvents(0),
                 _inhibitedEvents(0),
                 _datum(_initialBlobs.size()),
@@ -114,7 +113,7 @@ namespace tarsier {
             /// operator() handles an event.
             virtual void operator()(Event event) {
                 {
-                    auto probability = static_cast<double>(0);
+                    auto probability = 0.0;
                     auto winner = _datum.end();
                     for (auto dataIterator = _datum.rbegin(); dataIterator != _datum.rend(); ++dataIterator) {
                         const auto xPosition = static_cast<double>(event.x) - dataIterator->blob.x;
@@ -136,7 +135,7 @@ namespace tarsier {
                     }
                     probability /= (2 * M_PI);
 
-                    const auto exponentialDecay = std::exp(-(event.timestamp - _previousTimestamp) / _activityDecay);
+                    const auto exponentialDecay = std::exp(-static_cast<double>(event.timestamp - _previousTimestamp) / _activityDecay);
                     auto datumToAdd = std::vector<Data>();
                     for (auto dataIterator = _datum.begin(); dataIterator != _datum.end();) {
                         dataIterator->activity *= exponentialDecay;
@@ -313,7 +312,7 @@ namespace tarsier {
             HandleUpdatedHiddenBlob _handleUpdatedHiddenBlob;
             HandleDemotedHiddenBlob _handleDemotedHiddenBlob;
             HandleDeletedBlob _handleDeletedBlob;
-            int64_t _previousTimestamp;
+            uint64_t _previousTimestamp;
             std::size_t _skippedEvents;
             std::size_t _inhibitedEvents;
             std::vector<Data> _datum;
@@ -342,7 +341,6 @@ namespace tarsier {
         HandleDeletedBlob
     > make_trackBlobs(
         std::vector<Blob> initialBlobs,
-        int64_t initialTimestamp,
         double activityDecay,
         double minimumProbability,
         double promotionActivity,
@@ -373,7 +371,6 @@ namespace tarsier {
             HandleDeletedBlob
         >(
             std::move(initialBlobs),
-            initialTimestamp,
             activityDecay,
             minimumProbability,
             promotionActivity,

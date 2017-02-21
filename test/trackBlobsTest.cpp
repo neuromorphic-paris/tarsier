@@ -5,7 +5,7 @@
 struct Event {
     std::size_t x;
     std::size_t y;
-    int64_t timestamp;
+    uint64_t timestamp;
 };
 
 TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
@@ -23,7 +23,6 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
             tarsier::Blob{25, 75, 70, 0, 70},
             tarsier::Blob{75, 75, 70, 0, 70},
         },
-           0, // initialTimestamp
          1e3, // activityDecay
            0, // minimumProbability
         0.38, // promotionActivity
@@ -60,9 +59,9 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         }
     );
 
-    for (auto timestamp = static_cast<int64_t>(0); timestamp < 20000; timestamp += 10) {
-        auto xOffset = static_cast<int64_t>(0);
-        auto yOffset = static_cast<int64_t>(0);
+    for (uint64_t timestamp = 0; timestamp < 20000; timestamp += 10) {
+        int64_t xOffset = 0;
+        int64_t yOffset = 0;
         if (timestamp % 40 == 0) {
             xOffset = 5;
         } else if (timestamp % 40 == 10) {
@@ -74,9 +73,9 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         }
         trackBlobs(Event{static_cast<std::size_t>(25 + xOffset), static_cast<std::size_t>(25 + yOffset), timestamp});
     }
-    for (auto timestamp = static_cast<int64_t>(20000); timestamp < 40000; timestamp += 10) {
-        auto xOffset = static_cast<int64_t>(0);
-        auto yOffset = static_cast<int64_t>(0);
+    for (uint64_t timestamp = 20000; timestamp < 40000; timestamp += 10) {
+        int64_t xOffset = 0;
+        int64_t yOffset = 0;
         if (timestamp % 40 == 0) {
             xOffset = 15;
         } else if (timestamp % 40 == 10) {
@@ -86,8 +85,8 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         } else {
             yOffset = -15;
         }
-        auto x = static_cast<std::size_t>(25);
-        auto y = static_cast<std::size_t>(25);
+        std::size_t x = 25;
+        std::size_t y = 25;
         if (timestamp % 30 == 0) {
             x += 50;
         } else if (timestamp % 30 == 10) {

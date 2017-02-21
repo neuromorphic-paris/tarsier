@@ -51,7 +51,7 @@ namespace tarsier {
             const std::size_t _width;
             EventFromThresholdCrossing _eventFromThresholdCrossing;
             HandleEvent _handleEvent;
-            std::vector<std::pair<bool, int64_t>> _areTriggeredAndTimestamps;
+            std::vector<std::pair<bool, uint64_t>> _areTriggeredAndTimestamps;
     };
 
     /// make_stitch creates a Stitch from functors.
