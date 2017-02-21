@@ -17,7 +17,7 @@ namespace tarsier {
                 _height(height),
                 _decay(decay),
                 _handleEvent(std::forward<HandleEvent>(handleEvent)),
-                _timestamps(width * height, std::numeric_limits<int64_t>::lowest())
+                _timestamps(width * height)
             {
             }
             MaskIsolated(const MaskIsolated&) = delete;
@@ -45,7 +45,7 @@ namespace tarsier {
             const std::size_t _height;
             const uint64_t _decay;
             HandleEvent _handleEvent;
-            std::vector<int64_t> _timestamps;
+            std::vector<uint64_t> _timestamps;
     };
 
     /// make_maskIsolated creates a MaskIsolated from a functor.

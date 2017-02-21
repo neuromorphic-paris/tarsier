@@ -6,7 +6,7 @@ struct Event {};
 
 
 TEST_CASE("Replicate an event and trigger several callbacks", "[Replicate]") {
-    auto count = static_cast<std::size_t>(0);
+    std::size_t count = 0;
     auto replicate = tarsier::make_replicate<Event>(
         [&count](Event) {
             ++count;
