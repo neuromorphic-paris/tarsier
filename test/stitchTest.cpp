@@ -5,7 +5,7 @@
 struct ThresholdCrossing {
     std::size_t x;
     std::size_t y;
-    int64_t timestamp;
+    uint64_t timestamp;
     bool isSecond;
 };
 
