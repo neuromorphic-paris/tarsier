@@ -18,7 +18,7 @@ solution 'tarsier'
         trigger = 'uninstall',
         description = 'Remove all the files installed during build processes',
         execute = function ()
-            os.execute('rm -rf /usr/local/include/tarsier'))
+            os.execute('rm -rf /usr/local/include/tarsier')
             print(string.char(27) .. '[32mTarsier library uninstalled.' .. string.char(27) .. '[0m')
             os.exit()
         end
