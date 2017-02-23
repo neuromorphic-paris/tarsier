@@ -24,6 +24,7 @@ before_install:
             sudo apt-get -qq update -y
             sudo apt-get install premake4 -y
             sudo ln -s /usr/bin/make /usr/bin/gmake
+            sudo chown -R `whoami` /usr/local
         fi
 
 before_script:
