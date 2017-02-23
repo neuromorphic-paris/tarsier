@@ -1,20 +1,3 @@
--- Define the install prefix
-prefix = nil
-    -- Installation under Linux
-    if (os.is('linux')) then
-        prefix = '/usr/local'
-        os.execute('sudo chown -R `whoami` ' .. prefix .. ' && sudo chmod -R 751 ' .. prefix)
-
-    -- Installation under Mac OS X
-    elseif (os.is('macosx')) then
-        prefix = '/usr/local'
-
-    -- Other platforms
-    else
-        print(string.char(27) .. '[31mThe installation is not supported on your platform' .. string.char(27) .. '[0m')
-        os.exit()
-    end
-
 solution 'tarsier'
     configurations {'Release', 'Debug'}
     location 'build'
@@ -23,9 +6,9 @@ solution 'tarsier'
         trigger = "install",
         description = "Install the library",
         execute = function ()
-            os.execute('rm -rf ' .. path.join(prefix, 'include/tarsier'))
-            os.execute('mkdir ' .. path.join(prefix, 'include/tarsier'))
-            os.execute('cp -r source/. ' ..  path.join(prefix, 'include/tarsier'))
+            os.execute('rm -rf /usr/local/include/tarsier')
+            os.execute('mkdir /usr/local/include/tarsier')
+            os.execute('cp -r source/. /usr/local/include/tarsier')
             print(string.char(27) .. '[32mTarsier library installed.' .. string.char(27) .. '[0m')
             os.exit()
         end
@@ -35,7 +18,7 @@ solution 'tarsier'
         trigger = 'uninstall',
         description = 'Remove all the files installed during build processes',
         execute = function ()
-            os.execute('rm -rf ' .. path.join(prefix, 'include/tarsier'))
+            os.execute('rm -rf /usr/local/include/tarsier'))
             print(string.char(27) .. '[32mTarsier library uninstalled.' .. string.char(27) .. '[0m')
             os.exit()
         end
@@ -63,9 +46,9 @@ solution 'tarsier'
             buildoptions {'-std=c++11'}
             linkoptions {'-std=c++11'}
             postbuildcommands {
-                'rm -rf ' .. path.join(prefix, 'include/tarsier'),
-                'mkdir ' .. path.join(prefix, 'include/tarsier'),
-                'cp -r ../source/. ' ..  path.join(prefix, 'include/tarsier'),
+                'rm -rf /usr/local/include/tarsier',
+                'mkdir /usr/local/include/tarsier',
+                'cp -r ../source/. /usr/local/include/tarsier',
             }
 
         -- Mac OS X specific settings
@@ -73,7 +56,7 @@ solution 'tarsier'
             buildoptions {'-std=c++11', '-stdlib=libc++'}
             linkoptions {'-std=c++11', '-stdlib=libc++'}
             postbuildcommands {
-                'rm -rf ' .. path.join(prefix, 'include/tarsier'),
-                'mkdir ' .. path.join(prefix, 'include/tarsier'),
-                'cp -r ../source/. ' ..  path.join(prefix, 'include/tarsier'),
+                'rm -rf /usr/local/include/tarsier',
+                'mkdir /usr/local/include/tarsier',
+                'cp -r ../source/. /usr/local/include/tarsier',
             }
