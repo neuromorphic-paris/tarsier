@@ -6,11 +6,10 @@
 namespace tarsier {
 
     /// MirrorX inverts the x coordinate.
-    template <typename Event, typename HandleEvent>
+    template <typename Event, std::size_t width, typename HandleEvent>
     class MirrorX {
         public:
-            MirrorX(std::size_t width, HandleEvent handleEvent) :
-                _width(width),
+            MirrorX(HandleEvent handleEvent) :
                 _handleEvent(std::forward<HandleEvent>(handleEvent))
             {
             }
@@ -22,18 +21,17 @@ namespace tarsier {
 
             /// operator() handles an event.
             virtual void operator()(Event event) {
-                event.x = _width - 1 - event.x;
+                event.x = width - 1 - event.x;
                 _handleEvent(std::move(event));
             }
 
         protected:
-            const std::size_t _width;
             HandleEvent _handleEvent;
     };
 
     /// make_mirrorX creates a MirrorX from a functor.
-    template<typename Event, typename HandleEvent>
-    MirrorX<Event, HandleEvent> make_mirrorX(std::size_t width, HandleEvent handleEvent) {
-        return MirrorX<Event, HandleEvent>(width, std::forward<HandleEvent>(handleEvent));
+    template<typename Event, std::size_t width, typename HandleEvent>
+    MirrorX<Event, width, HandleEvent> make_mirrorX(HandleEvent handleEvent) {
+        return MirrorX<Event, width, HandleEvent>(std::forward<HandleEvent>(handleEvent));
     }
 }

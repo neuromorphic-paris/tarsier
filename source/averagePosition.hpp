@@ -22,7 +22,7 @@ namespace tarsier {
     template <typename Event, typename HandlePosition>
     class AveragePosition {
         public:
-            AveragePosition(double inertia, std::size_t eventsToReceive, HandlePosition handlePosition) :
+            AveragePosition(const double& inertia, const std::size_t& eventsToReceive, HandlePosition handlePosition) :
                 _inertia(inertia),
                 _eventsToReceive(eventsToReceive),
                 _handlePosition(std::forward<HandlePosition>(handlePosition))
@@ -57,7 +57,11 @@ namespace tarsier {
 
     /// make_averagePosition creates an AveragePosition from a functor.
     template<typename Event, typename HandlePosition>
-    AveragePosition<Event, HandlePosition> make_averagePosition(double inertia, std::size_t eventsToReceive, HandlePosition handlePosition) {
+    AveragePosition<Event, HandlePosition> make_averagePosition(
+        const double& inertia,
+        const std::size_t& eventsToReceive,
+        HandlePosition handlePosition
+    ) {
         return AveragePosition<Event, HandlePosition>(inertia, eventsToReceive, std::forward<HandlePosition>(handlePosition));
     }
 }

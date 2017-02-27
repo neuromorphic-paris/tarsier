@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <utility>
-#include <vector>
+#include <array>
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
@@ -10,14 +10,12 @@ namespace tarsier {
     /// Stitch turns a stream of threshold crossings into a stream of time differences.
     /// EventFromThresholdCrossing must have the following signature:
     ///     eventFromThresholdCrossing(const ThresholdCrossing& secondThresholdCrossing, uint64_t timeDelta) -> Event
-    template <typename ThresholdCrossing, typename Event, typename EventFromThresholdCrossing, typename HandleEvent>
+    template <typename ThresholdCrossing, typename Event, std::size_t width, std::size_t height, typename EventFromThresholdCrossing, typename HandleEvent>
     class Stitch {
         public:
-            Stitch(std::size_t width, std::size_t height, EventFromThresholdCrossing eventFromThresholdCrossing, HandleEvent handleEvent) :
-                _width(width),
+            Stitch(EventFromThresholdCrossing eventFromThresholdCrossing, HandleEvent handleEvent) :
                 _eventFromThresholdCrossing(std::forward<EventFromThresholdCrossing>(eventFromThresholdCrossing)),
-                _handleEvent(std::forward<HandleEvent>(handleEvent)),
-                _areTriggeredAndTimestamps(width * height)
+                _handleEvent(std::forward<HandleEvent>(handleEvent))
             {
             }
             Stitch(const Stitch&) = delete;
@@ -28,7 +26,7 @@ namespace tarsier {
 
             /// operator() handles a threshold crossing.
             virtual void operator()(ThresholdCrossing thresholdCrossing) {
-                auto& isTriggeredAndTimestamp = _areTriggeredAndTimestamps[thresholdCrossing.x + thresholdCrossing.y * _width];
+                auto& isTriggeredAndTimestamp = _areTriggeredAndTimestamps[thresholdCrossing.x + thresholdCrossing.y * width];
                 if (!isTriggeredAndTimestamp.first) {
                     if (!thresholdCrossing.isSecond) {
                         isTriggeredAndTimestamp.first = true;
@@ -39,7 +37,7 @@ namespace tarsier {
                         isTriggeredAndTimestamp.first = false;
                         _handleEvent(_eventFromThresholdCrossing(
                             thresholdCrossing,
-                            static_cast<uint64_t>(thresholdCrossing.timestamp - isTriggeredAndTimestamp.second)
+                            static_cast<uint64_t>(thresholdCrossing.timestamp) - isTriggeredAndTimestamp.second
                         ));
                     } else {
                         isTriggeredAndTimestamp.second = thresholdCrossing.timestamp;
@@ -48,23 +46,18 @@ namespace tarsier {
             }
 
         protected:
-            const std::size_t _width;
             EventFromThresholdCrossing _eventFromThresholdCrossing;
             HandleEvent _handleEvent;
-            std::vector<std::pair<bool, uint64_t>> _areTriggeredAndTimestamps;
+            std::array<std::pair<bool, uint64_t>, width * height> _areTriggeredAndTimestamps;
     };
 
     /// make_stitch creates a Stitch from functors.
-    template <typename ThresholdCrossing, typename Event, typename EventFromThresholdCrossing, typename HandleEvent>
-    Stitch<ThresholdCrossing, Event, EventFromThresholdCrossing, HandleEvent> make_stitch(
-        std::size_t width,
-        std::size_t height,
+    template <typename ThresholdCrossing, typename Event, std::size_t width, std::size_t height, typename EventFromThresholdCrossing, typename HandleEvent>
+    Stitch<ThresholdCrossing, Event, width, height, EventFromThresholdCrossing, HandleEvent> make_stitch(
         EventFromThresholdCrossing eventFromThresholdCrossing,
         HandleEvent handleEvent
     ) {
-        return Stitch<ThresholdCrossing, Event, EventFromThresholdCrossing, HandleEvent>(
-            width,
-            height,
+        return Stitch<ThresholdCrossing, Event, width, height, EventFromThresholdCrossing, HandleEvent>(
             std::forward<EventFromThresholdCrossing>(eventFromThresholdCrossing),
             std::forward<HandleEvent>(handleEvent)
         );

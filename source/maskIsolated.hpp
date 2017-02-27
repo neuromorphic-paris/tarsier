@@ -2,22 +2,18 @@
 
 #include <cstdint>
 #include <utility>
-#include <vector>
+#include <array>
 #include <limits>
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
 
     /// MaskIsolated propagates only events that are not isolated spatially or in time.
-    template <typename Event, typename HandleEvent>
+    template <typename Event, std::size_t width, std::size_t height, uint64_t decay, typename HandleEvent>
     class MaskIsolated {
         public:
-            MaskIsolated(std::size_t width, std::size_t height, uint64_t decay, HandleEvent handleEvent) :
-                _width(width),
-                _height(height),
-                _decay(decay),
-                _handleEvent(std::forward<HandleEvent>(handleEvent)),
-                _timestamps(width * height)
+            MaskIsolated(HandleEvent handleEvent) :
+                _handleEvent(std::forward<HandleEvent>(handleEvent))
             {
             }
             MaskIsolated(const MaskIsolated&) = delete;
@@ -28,29 +24,26 @@ namespace tarsier {
 
             /// operator() handles an event.
             virtual void operator()(Event event) {
-                const auto index = event.x + event.y * _width;
-                _timestamps[index] = event.timestamp + _decay;
+                const auto index = event.x + event.y * width;
+                _timestamps[index] = event.timestamp + decay;
                 if (
                     (event.x > 0 && _timestamps[index - 1] > event.timestamp)
-                    || (event.x < _width - 1 && _timestamps[index + 1] > event.timestamp)
-                    || (event.y > 0 && _timestamps[index - _width] > event.timestamp)
-                    || (event.y < _height - 1 && _timestamps[index + _width] > event.timestamp)
+                    || (event.x < width - 1 && _timestamps[index + 1] > event.timestamp)
+                    || (event.y > 0 && _timestamps[index - width] > event.timestamp)
+                    || (event.y < height - 1 && _timestamps[index + width] > event.timestamp)
                 ) {
                     _handleEvent(std::move(event));
                 }
             }
 
         protected:
-            const std::size_t _width;
-            const std::size_t _height;
-            const uint64_t _decay;
             HandleEvent _handleEvent;
-            std::vector<uint64_t> _timestamps;
+            std::array<uint64_t, width * height> _timestamps;
     };
 
     /// make_maskIsolated creates a MaskIsolated from a functor.
-    template<typename Event, typename HandleEvent>
-    MaskIsolated<Event, HandleEvent> make_maskIsolated(std::size_t width, std::size_t height, uint64_t decay, HandleEvent handleEvent) {
-        return MaskIsolated<Event, HandleEvent>(width, height, decay, std::forward<HandleEvent>(handleEvent));
+    template<typename Event, std::size_t width, std::size_t height, uint64_t decay, typename HandleEvent>
+    MaskIsolated<Event, width, height, decay, HandleEvent> make_maskIsolated(HandleEvent handleEvent) {
+        return MaskIsolated<Event, width, height, decay, HandleEvent>(std::forward<HandleEvent>(handleEvent));
     }
 }

@@ -9,7 +9,7 @@ struct Event {
 };
 
 TEST_CASE("Filter out events with low spatial or in time activity", "[MaskIsolated]") {
-    auto maskIsolated = tarsier::make_maskIsolated<Event>(304, 240, 10, [](Event event) -> void {
+    auto maskIsolated = tarsier::make_maskIsolated<Event, 304, 240, 10>([](Event event) -> void {
         REQUIRE(event.x == 100);
     });
     maskIsolated(Event{200, 200, 0});
