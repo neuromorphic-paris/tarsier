@@ -23,13 +23,11 @@ namespace tarsier {
     }
 
     /// ComputeFlow evaluates the optical flow.
-    template <typename Event, typename HandleFlow>
+    template <typename Event, std::size_t width, std::size_t height, typename HandleFlow>
     class ComputeFlow {
 
         public:
-            ComputeFlow(std::size_t width, std::size_t height, HandleFlow handleFlow) :
-                _width(width),
-                _height(height),
+            ComputeFlow(HandleFlow handleFlow) :
                 _handleFlow(std::forward<HandleFlow>(handleFlow)),
                 _timestamps(width * height, std::numeric_limits<int64_t>::lowest())
             {
@@ -46,8 +44,6 @@ namespace tarsier {
             }
 
         protected:
-            const std::size_t _width;
-            const std::size_t _height;
             HandleFlow _handleFlow;
     }
 }

@@ -7,12 +7,10 @@
 namespace tarsier {
 
     /// ShiftX translates the x coordinate.
-    template <typename Event, typename HandleEvent>
+    template <typename Event, std::size_t width, int64_t shift, typename HandleEvent>
     class ShiftX {
         public:
-            ShiftX(std::size_t width, int64_t shift, HandleEvent handleEvent) :
-                _width(width),
-                _shift(shift),
+            ShiftX(HandleEvent handleEvent) :
                 _handleEvent(std::forward<HandleEvent>(handleEvent))
             {
             }
@@ -24,22 +22,20 @@ namespace tarsier {
 
             /// operator() handles an event.
             virtual void operator()(Event event) {
-                const auto shifted = static_cast<int64_t>(event.x) + _shift;
-                if (shifted >= 0 && static_cast<std::size_t>(shifted) < _width) {
+                const auto shifted = static_cast<int64_t>(event.x) + shift;
+                if (shifted >= 0 && static_cast<std::size_t>(shifted) < width) {
                     event.x = shifted;
                     _handleEvent(std::move(event));
                 }
             }
 
         protected:
-            const std::size_t _width;
-            const int64_t _shift;
             HandleEvent _handleEvent;
     };
 
     /// make_shiftX creates a ShiftX from a functor.
-    template<typename Event, typename HandleEvent>
-    ShiftX<Event, HandleEvent> make_shiftX(std::size_t width, int64_t shift, HandleEvent handleEvent) {
-        return ShiftX<Event, HandleEvent>(width, shift, std::forward<HandleEvent>(handleEvent));
+    template<typename Event, std::size_t width, int64_t shift, typename HandleEvent>
+    ShiftX<Event, width, shift, HandleEvent> make_shiftX(HandleEvent handleEvent) {
+        return ShiftX<Event, width, shift, HandleEvent>(std::forward<HandleEvent>(handleEvent));
     }
 }

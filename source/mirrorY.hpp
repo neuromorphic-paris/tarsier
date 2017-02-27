@@ -6,11 +6,10 @@
 namespace tarsier {
 
     /// MirrorY inverts the y coordinate.
-    template <typename Event, typename HandleEvent>
+    template <typename Event, std::size_t height, typename HandleEvent>
     class MirrorY {
         public:
-            MirrorY(std::size_t height, HandleEvent handleEvent) :
-                _height(height),
+            MirrorY(HandleEvent handleEvent) :
                 _handleEvent(std::forward<HandleEvent>(handleEvent))
             {
             }
@@ -22,18 +21,17 @@ namespace tarsier {
 
             /// operator() handles an event.
             virtual void operator()(Event event) {
-                event.y = _height - 1 - event.y;
+                event.y = height - 1 - event.y;
                 _handleEvent(std::move(event));
             }
 
         protected:
-            const std::size_t _height;
             HandleEvent _handleEvent;
     };
 
     /// make_mirrorY creates a MirrorY from a functor.
-    template<typename Event, typename HandleEvent>
-    MirrorY<Event, HandleEvent> make_mirrorY(std::size_t height, HandleEvent handleEvent) {
-        return MirrorY<Event, HandleEvent>(height, std::forward<HandleEvent>(handleEvent));
+    template<typename Event, std::size_t height, typename HandleEvent>
+    MirrorY<Event, height, HandleEvent> make_mirrorY(HandleEvent handleEvent) {
+        return MirrorY<Event, height, HandleEvent>(std::forward<HandleEvent>(handleEvent));
     }
 }
