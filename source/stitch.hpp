@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <utility>
-#include <array>
+#include <vector>
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
@@ -15,7 +15,8 @@ namespace tarsier {
         public:
             Stitch(EventFromThresholdCrossing eventFromThresholdCrossing, HandleEvent handleEvent) :
                 _eventFromThresholdCrossing(std::forward<EventFromThresholdCrossing>(eventFromThresholdCrossing)),
-                _handleEvent(std::forward<HandleEvent>(handleEvent))
+                _handleEvent(std::forward<HandleEvent>(handleEvent)),
+                _areTriggeredAndTimestamps(width * height, {false, 0})
             {
             }
             Stitch(const Stitch&) = delete;
@@ -48,7 +49,7 @@ namespace tarsier {
         protected:
             EventFromThresholdCrossing _eventFromThresholdCrossing;
             HandleEvent _handleEvent;
-            std::array<std::pair<bool, uint64_t>, width * height> _areTriggeredAndTimestamps;
+            std::vector<std::pair<bool, uint64_t>> _areTriggeredAndTimestamps;
     };
 
     /// make_stitch creates a Stitch from functors.

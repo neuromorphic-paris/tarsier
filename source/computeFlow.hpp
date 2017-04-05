@@ -27,7 +27,8 @@ namespace tarsier {
         public:
             ComputeFlow(FlowEventFromEvent flowEventFromEvent, HandleFlowEvent handleFlowEvent) :
                 _flowEventFromEvent(std::forward<FlowEventFromEvent>(flowEventFromEvent)),
-                _handleFlowEvent(std::forward<HandleFlowEvent>(handleFlowEvent))
+                _handleFlowEvent(std::forward<HandleFlowEvent>(handleFlowEvent)),
+                _timestamps(width * height, 0)
             {
             }
             ComputeFlow(const ComputeFlow&) = delete;
@@ -106,7 +107,7 @@ namespace tarsier {
         protected:
             FlowEventFromEvent _flowEventFromEvent;
             HandleFlowEvent _handleFlowEvent;
-            std::array<uint64_t, width * height> _timestamps;
+            std::vector<uint64_t> _timestamps;
     };
 
     /// make_computeStitch creates a Stitch from functors.
