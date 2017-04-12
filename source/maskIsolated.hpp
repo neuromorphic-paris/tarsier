@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <utility>
-#include <array>
+#include <vector>
 #include <limits>
 
 /// tarsier is a collection of event handlers.
@@ -13,7 +13,8 @@ namespace tarsier {
     class MaskIsolated {
         public:
             MaskIsolated(HandleEvent handleEvent) :
-                _handleEvent(std::forward<HandleEvent>(handleEvent))
+                _handleEvent(std::forward<HandleEvent>(handleEvent)),
+                _timestamps(width * height, 0)
             {
             }
             MaskIsolated(const MaskIsolated&) = delete;
@@ -38,7 +39,7 @@ namespace tarsier {
 
         protected:
             HandleEvent _handleEvent;
-            std::array<uint64_t, width * height> _timestamps;
+            std::vector<uint64_t> _timestamps;
     };
 
     /// make_maskIsolated creates a MaskIsolated from a functor.
