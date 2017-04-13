@@ -14,7 +14,7 @@ namespace tarsier {
         public:
             MaskIsolated(HandleEvent handleEvent) :
                 _handleEvent(std::forward<HandleEvent>(handleEvent)),
-                _timestamps(width * height, 0)
+                _timestamps(width * height)
             {
             }
             MaskIsolated(const MaskIsolated&) = delete;
