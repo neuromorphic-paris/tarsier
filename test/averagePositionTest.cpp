@@ -3,8 +3,8 @@
 #include "catch.hpp"
 
 struct Event {
-    std::size_t x;
-    std::size_t y;
+    uint_fast16_t x;
+    uint_fast16_t y;
 };
 
 TEST_CASE("Average the position of the given events", "[AveragePosition]") {

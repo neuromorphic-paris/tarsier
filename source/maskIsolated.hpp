@@ -9,7 +9,7 @@
 namespace tarsier {
 
     /// MaskIsolated propagates only events that are not isolated spatially or in time.
-    template <typename Event, std::size_t width, std::size_t height, uint64_t decay, typename HandleEvent>
+    template <typename Event, uint_fast16_t width, uint_fast16_t height, uint_fast64_t decay, typename HandleEvent>
     class MaskIsolated {
         public:
             MaskIsolated(HandleEvent handleEvent) :
@@ -24,7 +24,7 @@ namespace tarsier {
             virtual ~MaskIsolated() {}
 
             /// operator() handles an event.
-            virtual void operator()(Event event) {
+            virtual void operator()(const Event& event) {
                 const auto index = event.x + event.y * width;
                 _timestamps[index] = event.timestamp + decay;
                 if (
@@ -33,17 +33,17 @@ namespace tarsier {
                     || (event.y > 0 && _timestamps[index - width] > event.timestamp)
                     || (event.y < height - 1 && _timestamps[index + width] > event.timestamp)
                 ) {
-                    _handleEvent(std::move(event));
+                    _handleEvent(event);
                 }
             }
 
         protected:
             HandleEvent _handleEvent;
-            std::vector<uint64_t> _timestamps;
+            std::vector<uint_fast64_t> _timestamps;
     };
 
     /// make_maskIsolated creates a MaskIsolated from a functor.
-    template<typename Event, std::size_t width, std::size_t height, uint64_t decay, typename HandleEvent>
+    template<typename Event, uint_fast16_t width, uint_fast16_t height, uint64_t decay, typename HandleEvent>
     MaskIsolated<Event, width, height, decay, HandleEvent> make_maskIsolated(HandleEvent handleEvent) {
         return MaskIsolated<Event, width, height, decay, HandleEvent>(std::forward<HandleEvent>(handleEvent));
     }

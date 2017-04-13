@@ -1,12 +1,13 @@
 #pragma once
 
+#include <cstdint>
 #include <utility>
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
 
     /// MirrorY inverts the y coordinate.
-    template <typename Event, std::size_t height, typename HandleEvent>
+    template <typename Event, uint_fast16_t height, typename HandleEvent>
     class MirrorY {
         public:
             MirrorY(HandleEvent handleEvent) :
@@ -30,7 +31,7 @@ namespace tarsier {
     };
 
     /// make_mirrorY creates a MirrorY from a functor.
-    template<typename Event, std::size_t height, typename HandleEvent>
+    template<typename Event, uint_fast16_t height, typename HandleEvent>
     MirrorY<Event, height, HandleEvent> make_mirrorY(HandleEvent handleEvent) {
         return MirrorY<Event, height, HandleEvent>(std::forward<HandleEvent>(handleEvent));
     }

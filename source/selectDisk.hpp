@@ -24,9 +24,9 @@ namespace tarsier {
             virtual ~SelectDisk() {}
 
             /// operator() handles an event.
-            virtual void operator()(Event event) {
+            virtual void operator()(const Event& event) {
                 if (std::pow(static_cast<double>(event.x) - _centerX, 2) + std::pow(static_cast<double>(event.y) - _centerY, 2) < _squaredRadius) {
-                    _handleEvent(std::move(event));
+                    _handleEvent(event);
                 }
             }
 

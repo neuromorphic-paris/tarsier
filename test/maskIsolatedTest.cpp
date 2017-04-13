@@ -3,9 +3,9 @@
 #include "catch.hpp"
 
 struct Event {
-    std::size_t x;
-    std::size_t y;
-    uint64_t timestamp;
+    uint_fast16_t x;
+    uint_fast16_t y;
+    uint_fast64_t timestamp;
 };
 
 TEST_CASE("Filter out events with low spatial or in time activity", "[MaskIsolated]") {

@@ -312,7 +312,7 @@ namespace tarsier {
             HandleUpdatedHiddenBlob _handleUpdatedHiddenBlob;
             HandleDemotedHiddenBlob _handleDemotedHiddenBlob;
             HandleDeletedBlob _handleDeletedBlob;
-            uint64_t _previousTimestamp;
+            uint_fast64_t _previousTimestamp;
             std::size_t _skippedEvents;
             std::size_t _inhibitedEvents;
             std::vector<Data> _datum;

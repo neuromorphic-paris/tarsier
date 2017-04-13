@@ -3,15 +3,15 @@
 #include "catch.hpp"
 
 struct Event {
-    std::size_t x;
-    std::size_t y;
-    uint64_t timestamp;
+    uint_fast16_t x;
+    uint_fast16_t y;
+    uint_fast64_t timestamp;
 };
 
 struct FlowEvent {
-    std::size_t x;
-    std::size_t y;
-    uint64_t timestamp;
+    uint_fast16_t x;
+    uint_fast16_t y;
+    uint_fast64_t timestamp;
     double vx;
     double vy;
 };
