@@ -3,7 +3,7 @@
 #include "catch.hpp"
 
 struct Event {
-    std::size_t y;
+    uint64_t y;
 };
 
 TEST_CASE("Invert the y coordinate", "[MirrorY]") {

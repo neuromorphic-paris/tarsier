@@ -15,11 +15,11 @@ namespace tarsier {
     template <
         typename Event,
         typename FlowEvent,
-        std::size_t width,
-        std::size_t height,
-        std::size_t window,
+        uint64_t width,
+        uint64_t height,
+        uint64_t window,
         std::size_t numberOfMostRecentEvents,
-        uint64_t lifespan,
+        uint_fast64_t lifespan,
         typename FlowEventFromEvent,
         typename HandleFlowEvent
     >
@@ -43,9 +43,9 @@ namespace tarsier {
                 const auto lifespanThreshold = (event.timestamp <= lifespan ? 0 : event.timestamp - lifespan);
                 auto mostRecentXsAndYsAndTimeDeltas = std::vector<std::array<double, 3>>{};
                 mostRecentXsAndYsAndTimeDeltas.reserve(window * window);
-                for (std::size_t x = (event.x <= window ? 0 : event.x - window); x <= (event.x >= width - 1 - window ? width - 1 : event.x + window); ++x) {
-                    for (std::size_t y = (event.y <= window ? 0 : event.y - window); y <= (event.y >= height - 1 - window ? height - 1 : event.y + window); ++y) {
-                        const auto timestamp = _timestamps[x + y * width];
+                for (uint64_t x = (event.x <= window ? 0 : event.x - window); x <= (event.x >= width - 1 - window ? width - 1 : event.x + window); ++x) {
+                    for (uint64_t y = (event.y <= window ? 0 : event.y - window); y <= (event.y >= height - 1 - window ? height - 1 : event.y + window); ++y) {
+                        const auto& timestamp = _timestamps[x + y * width];
                         if (timestamp > lifespanThreshold) {
                             mostRecentXsAndYsAndTimeDeltas.push_back({{
                                 static_cast<double>(x),
@@ -107,18 +107,18 @@ namespace tarsier {
         protected:
             FlowEventFromEvent _flowEventFromEvent;
             HandleFlowEvent _handleFlowEvent;
-            std::vector<uint64_t> _timestamps;
+            std::vector<uint_fast64_t> _timestamps;
     };
 
     /// make_computeStitch creates a Stitch from functors.
     template <
         typename Event,
         typename FlowEvent,
-        std::size_t width,
-        std::size_t height,
-        std::size_t window,
+        uint64_t width,
+        uint64_t height,
+        uint64_t window,
         std::size_t numberOfMostRecentEvents,
-        uint64_t lifespan,
+        uint_fast64_t lifespan,
         typename FlowEventFromEvent,
         typename HandleFlowEvent
     >

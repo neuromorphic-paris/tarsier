@@ -38,7 +38,7 @@ namespace tarsier {
             virtual ~AveragePosition() {}
 
             /// operator() handles an event.
-            virtual void operator()(Event event) {
+            virtual void operator()(const Event& event) {
                 _position.x = _inertia * _position.x + (1 - _inertia) * event.x;
                 _position.y = _inertia * _position.y + (1 - _inertia) * event.y;
                 if (_eventsToReceive == 0) {

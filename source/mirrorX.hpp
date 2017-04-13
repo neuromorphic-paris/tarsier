@@ -1,12 +1,13 @@
 #pragma once
 
+#include <cstdint>
 #include <utility>
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
 
     /// MirrorX inverts the x coordinate.
-    template <typename Event, std::size_t width, typename HandleEvent>
+    template <typename Event, uint64_t width, typename HandleEvent>
     class MirrorX {
         public:
             MirrorX(HandleEvent handleEvent) :
@@ -30,7 +31,7 @@ namespace tarsier {
     };
 
     /// make_mirrorX creates a MirrorX from a functor.
-    template<typename Event, std::size_t width, typename HandleEvent>
+    template<typename Event, uint64_t width, typename HandleEvent>
     MirrorX<Event, width, HandleEvent> make_mirrorX(HandleEvent handleEvent) {
         return MirrorX<Event, width, HandleEvent>(std::forward<HandleEvent>(handleEvent));
     }

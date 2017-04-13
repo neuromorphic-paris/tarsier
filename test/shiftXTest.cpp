@@ -3,7 +3,7 @@
 #include "catch.hpp"
 
 struct Event {
-    std::size_t x;
+    uint64_t x;
 };
 
 TEST_CASE("Shift the x coordinate", "[ShiftX]") {

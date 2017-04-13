@@ -3,9 +3,9 @@
 #include "catch.hpp"
 
 struct Event {
-    std::size_t x;
-    std::size_t y;
-    uint64_t timestamp;
+    uint64_t x;
+    uint64_t y;
+    uint_fast64_t timestamp;
 };
 
 TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
@@ -59,9 +59,9 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         }
     );
 
-    for (uint64_t timestamp = 0; timestamp < 20000; timestamp += 10) {
-        int64_t xOffset = 0;
-        int64_t yOffset = 0;
+    for (uint_fast64_t timestamp = 0; timestamp < 20000; timestamp += 10) {
+        int_fast64_t xOffset = 0;
+        int_fast64_t yOffset = 0;
         if (timestamp % 40 == 0) {
             xOffset = 5;
         } else if (timestamp % 40 == 10) {
@@ -71,9 +71,9 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         } else {
             yOffset = -5;
         }
-        trackBlobs(Event{static_cast<std::size_t>(25 + xOffset), static_cast<std::size_t>(25 + yOffset), timestamp});
+        trackBlobs(Event{static_cast<uint64_t>(25 + xOffset), static_cast<uint64_t>(25 + yOffset), timestamp});
     }
-    for (uint64_t timestamp = 20000; timestamp < 40000; timestamp += 10) {
+    for (uint_fast64_t timestamp = 20000; timestamp < 40000; timestamp += 10) {
         int64_t xOffset = 0;
         int64_t yOffset = 0;
         if (timestamp % 40 == 0) {
@@ -85,8 +85,8 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         } else {
             yOffset = -15;
         }
-        std::size_t x = 25;
-        std::size_t y = 25;
+        uint64_t x = 25;
+        uint64_t y = 25;
         if (timestamp % 30 == 0) {
             x += 50;
         } else if (timestamp % 30 == 10) {
@@ -95,7 +95,7 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
             x += 50;
             y += 50;
         }
-        trackBlobs(Event{x + xOffset, y + yOffset, timestamp});
+        trackBlobs(Event{static_cast<uint64_t>(x + xOffset), static_cast<uint64_t>(y + yOffset), timestamp});
     }
 
     REQUIRE(promotedStep);

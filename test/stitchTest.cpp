@@ -3,21 +3,21 @@
 #include "catch.hpp"
 
 struct ThresholdCrossing {
-    std::size_t x;
-    std::size_t y;
-    uint64_t timestamp;
+    uint64_t x;
+    uint64_t y;
+    uint_fast64_t timestamp;
     bool isSecond;
 };
 
 struct Event {
-    std::size_t x;
-    std::size_t y;
-    uint64_t timeDelta;
+    uint64_t x;
+    uint64_t y;
+    uint_fast64_t timeDelta;
 };
 
 TEST_CASE("Stitch an threshold crossings stream", "[Stitch]") {
     auto stitch = tarsier::make_stitch<ThresholdCrossing, Event, 304, 240>(
-        [](const ThresholdCrossing& secondThresholdCrossing, uint64_t timeDelta) -> Event {
+        [](const ThresholdCrossing& secondThresholdCrossing, uint_fast64_t timeDelta) -> Event {
             return Event{secondThresholdCrossing.x, secondThresholdCrossing.y, timeDelta};
         },
         [](Event event) -> void {
