@@ -3,15 +3,15 @@
 #include "catch.hpp"
 
 struct ThresholdCrossing {
-    uint_fast16_t x;
-    uint_fast16_t y;
+    uint64_t x;
+    uint64_t y;
     uint_fast64_t timestamp;
     bool isSecond;
 };
 
 struct Event {
-    uint_fast16_t x;
-    uint_fast16_t y;
+    uint64_t x;
+    uint64_t y;
     uint_fast64_t timeDelta;
 };
 

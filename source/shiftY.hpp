@@ -7,7 +7,7 @@
 namespace tarsier {
 
     /// ShiftY translates the y coordinate.
-    template <typename Event, uint_fast16_t height, int32_t shift, typename HandleEvent>
+    template <typename Event, uint64_t height, int64_t shift, typename HandleEvent>
     class ShiftY {
         public:
             ShiftY(HandleEvent handleEvent) :
@@ -22,8 +22,8 @@ namespace tarsier {
 
             /// operator() handles an event.
             virtual void operator()(Event event) {
-                const auto shifted = static_cast<int32_t>(event.y) + shift;
-                if (shifted >= 0 && static_cast<uint_fast16_t>(shifted) < height) {
+                const auto shifted = static_cast<int64_t>(event.y) + shift;
+                if (shifted >= 0 && static_cast<uint64_t>(shifted) < height) {
                     event.y = shifted;
                     _handleEvent(std::move(event));
                 }
@@ -34,7 +34,7 @@ namespace tarsier {
     };
 
     /// make_shiftY creates a ShiftY from a functor.
-    template<typename Event, uint_fast16_t height, int64_t shift, typename HandleEvent>
+    template<typename Event, uint64_t height, int64_t shift, typename HandleEvent>
     ShiftY<Event, height, shift, HandleEvent> make_shiftY(HandleEvent handleEvent) {
         return ShiftY<Event, height, shift, HandleEvent>(std::forward<HandleEvent>(handleEvent));
     }

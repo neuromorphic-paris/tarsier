@@ -3,7 +3,7 @@
 #include "catch.hpp"
 
 struct Event {
-    uint_fast16_t y;
+    uint64_t y;
 };
 
 TEST_CASE("Shift the y coordinate", "[ShiftY]") {

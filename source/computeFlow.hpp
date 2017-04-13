@@ -15,9 +15,9 @@ namespace tarsier {
     template <
         typename Event,
         typename FlowEvent,
-        uint_fast16_t width,
-        uint_fast16_t height,
-        uint_fast16_t window,
+        uint64_t width,
+        uint64_t height,
+        uint64_t window,
         std::size_t numberOfMostRecentEvents,
         uint_fast64_t lifespan,
         typename FlowEventFromEvent,
@@ -38,13 +38,13 @@ namespace tarsier {
             virtual ~ComputeFlow() {}
 
             /// operator() handles an event.
-            virtual void operator()(const Event& event) {
+            virtual void operator()(Event event) {
                 _timestamps[event.x + event.y * width] = event.timestamp;
                 const auto lifespanThreshold = (event.timestamp <= lifespan ? 0 : event.timestamp - lifespan);
                 auto mostRecentXsAndYsAndTimeDeltas = std::vector<std::array<double, 3>>{};
                 mostRecentXsAndYsAndTimeDeltas.reserve(window * window);
-                for (uint_fast16_t x = (event.x <= window ? 0 : event.x - window); x <= (event.x >= width - 1 - window ? width - 1 : event.x + window); ++x) {
-                    for (uint_fast16_t y = (event.y <= window ? 0 : event.y - window); y <= (event.y >= height - 1 - window ? height - 1 : event.y + window); ++y) {
+                for (uint64_t x = (event.x <= window ? 0 : event.x - window); x <= (event.x >= width - 1 - window ? width - 1 : event.x + window); ++x) {
+                    for (uint64_t y = (event.y <= window ? 0 : event.y - window); y <= (event.y >= height - 1 - window ? height - 1 : event.y + window); ++y) {
                         const auto& timestamp = _timestamps[x + y * width];
                         if (timestamp > lifespanThreshold) {
                             mostRecentXsAndYsAndTimeDeltas.push_back({{
@@ -114,9 +114,9 @@ namespace tarsier {
     template <
         typename Event,
         typename FlowEvent,
-        uint_fast16_t width,
-        uint_fast16_t height,
-        uint_fast16_t window,
+        uint64_t width,
+        uint64_t height,
+        uint64_t window,
         std::size_t numberOfMostRecentEvents,
         uint_fast64_t lifespan,
         typename FlowEventFromEvent,

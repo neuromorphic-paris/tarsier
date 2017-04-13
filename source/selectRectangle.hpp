@@ -7,7 +7,7 @@
 namespace tarsier {
 
     /// SelectRectangle propagates only the events within the specified rectangular window.
-    template <typename Event, uint_fast16_t left, uint_fast16_t bottom, uint_fast16_t width, uint_fast16_t height, typename HandleEvent>
+    template <typename Event, uint64_t left, uint64_t bottom, uint64_t width, uint64_t height, typename HandleEvent>
     class SelectRectangle {
         public:
             SelectRectangle(HandleEvent handleEvent) :
@@ -21,7 +21,7 @@ namespace tarsier {
             virtual ~SelectRectangle() {}
 
             /// operator() handles an event.
-            virtual void operator()(const Event& event) {
+            virtual void operator()(Event event) {
                 if (event.x >= left && event.x < left + width && event.y >= bottom && event.y < bottom + height) {
                     _handleEvent(event);
                 }
@@ -32,7 +32,7 @@ namespace tarsier {
     };
 
     /// make_selectRectangle creates a SelectRectangle from a functor.
-    template<typename Event, uint_fast16_t left, uint_fast16_t bottom, uint_fast16_t width, uint_fast16_t height, typename HandleEvent>
+    template<typename Event, uint64_t left, uint64_t bottom, uint64_t width, uint64_t height, typename HandleEvent>
     SelectRectangle<Event, left, bottom, width, height, HandleEvent> make_selectRectangle(HandleEvent handleEvent) {
         return SelectRectangle<Event, left, bottom, width, height, HandleEvent>(std::forward<HandleEvent>(handleEvent));
     }

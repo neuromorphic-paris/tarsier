@@ -10,7 +10,7 @@ namespace tarsier {
     /// Stitch turns a stream of threshold crossings into a stream of time differences.
     /// EventFromThresholdCrossing must have the following signature:
     ///     eventFromThresholdCrossing(const ThresholdCrossing& secondThresholdCrossing, const uint_fast64_t& timeDelta) -> Event
-    template <typename ThresholdCrossing, typename Event, uint_fast16_t width, uint_fast16_t height, typename EventFromThresholdCrossing, typename HandleEvent>
+    template <typename ThresholdCrossing, typename Event, uint64_t width, uint64_t height, typename EventFromThresholdCrossing, typename HandleEvent>
     class Stitch {
         public:
             Stitch(EventFromThresholdCrossing eventFromThresholdCrossing, HandleEvent handleEvent) :
@@ -53,7 +53,7 @@ namespace tarsier {
     };
 
     /// make_stitch creates a Stitch from functors.
-    template <typename ThresholdCrossing, typename Event, uint_fast16_t width, uint_fast16_t height, typename EventFromThresholdCrossing, typename HandleEvent>
+    template <typename ThresholdCrossing, typename Event, uint64_t width, uint64_t height, typename EventFromThresholdCrossing, typename HandleEvent>
     Stitch<ThresholdCrossing, Event, width, height, EventFromThresholdCrossing, HandleEvent> make_stitch(
         EventFromThresholdCrossing eventFromThresholdCrossing,
         HandleEvent handleEvent

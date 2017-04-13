@@ -24,8 +24,8 @@ namespace tarsier {
             virtual ~Replicate() {}
 
             /// operator() handles an event.
-            virtual void operator()(const Event& event) {
-                Replicate<Event, HandleEventCallbacks...>::trigger<0>(std::forward<const Event&>(event));
+            virtual void operator()(Event event) {
+                Replicate<Event, HandleEventCallbacks...>::trigger<0>(std::forward<Event>(event));
             }
 
         protected:
@@ -33,15 +33,15 @@ namespace tarsier {
             /// trigger calls the n-th event callback.
             template<std::size_t Index>
             typename std::enable_if<Index < sizeof...(HandleEventCallbacks), void>::type
-            trigger(const Event& event) {
+            trigger(Event event) {
                 std::get<Index>(_handleEventCallbacks)(event);
-                trigger<Index + 1>(std::forward<const Event&>(event));
+                trigger<Index + 1>(std::forward<Event>(event));
             }
 
             /// trigger is a termination for the template loop.
             template<std::size_t Index>
             typename std::enable_if<Index == sizeof...(HandleEventCallbacks), void>::type
-            trigger(const Event&) {}
+            trigger(Event) {}
 
             std::tuple<HandleEventCallbacks...> _handleEventCallbacks;
     };
