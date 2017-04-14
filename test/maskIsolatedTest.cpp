@@ -3,10 +3,10 @@
 #include "catch.hpp"
 
 struct Event {
-    uint64_t x;
-    uint64_t y;
-    uint_fast64_t timestamp;
-};
+    uint16_t x;
+    uint16_t y;
+    uint64_t timestamp;
+} __attribute__((packed));
 
 TEST_CASE("Filter out events with low spatial or in time activity", "[MaskIsolated]") {
     auto maskIsolated = tarsier::make_maskIsolated<Event, 304, 240, 10>([](Event event) -> void {

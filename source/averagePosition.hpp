@@ -15,7 +15,7 @@ namespace tarsier {
         /// y represents the coordinate of the flow on the sensor grid alongside the vertical axis.
         /// y is 0 on the bottom, and increases bottom to top.
         double y;
-    };
+    } __attribute__((packed));
 
     /// AveragePosition calculates the average position of the given events.
     /// An exponential event-wise decay is used as weight.
@@ -25,7 +25,8 @@ namespace tarsier {
             AveragePosition(const double& inertia, const std::size_t& eventsToReceive, HandlePosition handlePosition) :
                 _inertia(inertia),
                 _eventsToReceive(eventsToReceive),
-                _handlePosition(std::forward<HandlePosition>(handlePosition))
+                _handlePosition(std::forward<HandlePosition>(handlePosition)),
+                _position(Position{0.0, 0.0})
             {
                 if (_inertia < 0 || _inertia > 1) {
                     throw std::logic_error("inertia must be in the range [0, 1]");

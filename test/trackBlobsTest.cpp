@@ -3,10 +3,10 @@
 #include "catch.hpp"
 
 struct Event {
-    uint64_t x;
-    uint64_t y;
-    uint_fast64_t timestamp;
-};
+    uint16_t x;
+    uint16_t y;
+    uint64_t timestamp;
+} __attribute__((packed));
 
 TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
     auto promotedStep = false;
@@ -59,7 +59,7 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         }
     );
 
-    for (uint_fast64_t timestamp = 0; timestamp < 20000; timestamp += 10) {
+    for (uint64_t timestamp = 0; timestamp < 20000; timestamp += 10) {
         int_fast64_t xOffset = 0;
         int_fast64_t yOffset = 0;
         if (timestamp % 40 == 0) {
@@ -71,9 +71,9 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         } else {
             yOffset = -5;
         }
-        trackBlobs(Event{static_cast<uint64_t>(25 + xOffset), static_cast<uint64_t>(25 + yOffset), timestamp});
+        trackBlobs(Event{static_cast<uint16_t>(25 + xOffset), static_cast<uint16_t>(25 + yOffset), timestamp});
     }
-    for (uint_fast64_t timestamp = 20000; timestamp < 40000; timestamp += 10) {
+    for (uint64_t timestamp = 20000; timestamp < 40000; timestamp += 10) {
         int64_t xOffset = 0;
         int64_t yOffset = 0;
         if (timestamp % 40 == 0) {
@@ -95,7 +95,7 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
             x += 50;
             y += 50;
         }
-        trackBlobs(Event{static_cast<uint64_t>(x + xOffset), static_cast<uint64_t>(y + yOffset), timestamp});
+        trackBlobs(Event{static_cast<uint16_t>(x + xOffset), static_cast<uint16_t>(y + yOffset), timestamp});
     }
 
     REQUIRE(promotedStep);

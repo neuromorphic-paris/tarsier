@@ -2,8 +2,7 @@
 
 #include "catch.hpp"
 
-struct Event {};
-
+struct Event {} __attribute__((packed));
 
 TEST_CASE("Replicate an event and trigger several callbacks", "[Replicate]") {
     std::size_t count = 0;

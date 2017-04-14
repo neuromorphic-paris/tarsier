@@ -3,9 +3,9 @@
 #include "catch.hpp"
 
 struct Event {
-    uint64_t x;
-    uint64_t y;
-};
+    uint16_t x;
+    uint16_t y;
+}  __attribute__((packed));
 
 TEST_CASE("Average the position of the given events", "[AveragePosition]") {
     auto averagePosition = tarsier::make_averagePosition<Event>(0.5, 10, [](tarsier::Position position) -> void {
