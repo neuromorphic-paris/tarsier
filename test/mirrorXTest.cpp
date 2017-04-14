@@ -3,8 +3,8 @@
 #include "catch.hpp"
 
 struct Event {
-    uint64_t x;
-};
+    uint16_t x;
+} __attribute__((packed));
 
 TEST_CASE("Invert the x coordinate", "[MirrorX]") {
     auto mirrorX = tarsier::make_mirrorX<Event, 304>([](Event event) -> void {

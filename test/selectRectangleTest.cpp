@@ -3,9 +3,9 @@
 #include "catch.hpp"
 
 struct Event {
-    uint64_t x;
-    uint64_t y;
-};
+    uint16_t x;
+    uint16_t y;
+} __attribute__((packed));
 
 TEST_CASE("Filter out events outside the rectangle", "[SelectRectangle]") {
     auto selectRectangle = tarsier::make_selectRectangle<Event, 50, 50, 204, 140>([](Event event) -> void {

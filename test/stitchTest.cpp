@@ -3,11 +3,11 @@
 #include "catch.hpp"
 
 struct ThresholdCrossing {
-    uint64_t x;
-    uint64_t y;
+    uint16_t x;
+    uint16_t y;
     uint64_t timestamp;
     bool isSecond;
-};
+} __attribute__((packed));
 
 struct Event {
     uint64_t x;
