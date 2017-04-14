@@ -29,7 +29,7 @@ namespace tarsier {
 
         /// squaredSigmaY is the variance along the y axis.
         double squaredSigmaY;
-    };
+    } __attribute__((packed));
 
     /// TrackBlobs tracks the incoming events with gaussian blobs.
     /// HandlePromotedBlob must have the signature:
@@ -312,7 +312,7 @@ namespace tarsier {
             HandleUpdatedHiddenBlob _handleUpdatedHiddenBlob;
             HandleDemotedHiddenBlob _handleDemotedHiddenBlob;
             HandleDeletedBlob _handleDeletedBlob;
-            uint_fast64_t _previousTimestamp;
+            uint64_t _previousTimestamp;
             std::size_t _skippedEvents;
             std::size_t _inhibitedEvents;
             std::vector<Data> _datum;

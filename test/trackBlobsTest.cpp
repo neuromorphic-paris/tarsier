@@ -5,7 +5,7 @@
 struct Event {
     uint64_t x;
     uint64_t y;
-    uint_fast64_t timestamp;
+    uint64_t timestamp;
 };
 
 TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
@@ -59,7 +59,7 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         }
     );
 
-    for (uint_fast64_t timestamp = 0; timestamp < 20000; timestamp += 10) {
+    for (uint64_t timestamp = 0; timestamp < 20000; timestamp += 10) {
         int_fast64_t xOffset = 0;
         int_fast64_t yOffset = 0;
         if (timestamp % 40 == 0) {
@@ -73,7 +73,7 @@ TEST_CASE("Track gaussian blobs of incoming events", "[TrackBlobs]") {
         }
         trackBlobs(Event{static_cast<uint64_t>(25 + xOffset), static_cast<uint64_t>(25 + yOffset), timestamp});
     }
-    for (uint_fast64_t timestamp = 20000; timestamp < 40000; timestamp += 10) {
+    for (uint64_t timestamp = 20000; timestamp < 40000; timestamp += 10) {
         int64_t xOffset = 0;
         int64_t yOffset = 0;
         if (timestamp % 40 == 0) {

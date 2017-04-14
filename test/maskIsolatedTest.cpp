@@ -5,7 +5,7 @@
 struct Event {
     uint64_t x;
     uint64_t y;
-    uint_fast64_t timestamp;
+    uint64_t timestamp;
 };
 
 TEST_CASE("Filter out events with low spatial or in time activity", "[MaskIsolated]") {

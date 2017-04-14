@@ -19,7 +19,7 @@ namespace tarsier {
         uint64_t height,
         uint64_t window,
         std::size_t numberOfMostRecentEvents,
-        uint_fast64_t lifespan,
+        uint64_t lifespan,
         typename FlowEventFromEvent,
         typename HandleFlowEvent
     >
@@ -107,7 +107,7 @@ namespace tarsier {
         protected:
             FlowEventFromEvent _flowEventFromEvent;
             HandleFlowEvent _handleFlowEvent;
-            std::vector<uint_fast64_t> _timestamps;
+            std::vector<uint64_t> _timestamps;
     };
 
     /// make_computeStitch creates a Stitch from functors.
@@ -118,7 +118,7 @@ namespace tarsier {
         uint64_t height,
         uint64_t window,
         std::size_t numberOfMostRecentEvents,
-        uint_fast64_t lifespan,
+        uint64_t lifespan,
         typename FlowEventFromEvent,
         typename HandleFlowEvent
     >

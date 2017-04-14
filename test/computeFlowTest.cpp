@@ -5,13 +5,13 @@
 struct Event {
     uint64_t x;
     uint64_t y;
-    uint_fast64_t timestamp;
+    uint64_t timestamp;
 };
 
 struct FlowEvent {
     uint64_t x;
     uint64_t y;
-    uint_fast64_t timestamp;
+    uint64_t timestamp;
     double vx;
     double vy;
 };

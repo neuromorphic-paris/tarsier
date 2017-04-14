@@ -9,7 +9,7 @@
 namespace tarsier {
 
     /// MaskIsolated propagates only events that are not isolated spatially or in time.
-    template <typename Event, uint64_t width, uint64_t height, uint_fast64_t decay, typename HandleEvent>
+    template <typename Event, uint64_t width, uint64_t height, uint64_t decay, typename HandleEvent>
     class MaskIsolated {
         public:
             MaskIsolated(HandleEvent handleEvent) :
@@ -39,7 +39,7 @@ namespace tarsier {
 
         protected:
             HandleEvent _handleEvent;
-            std::vector<uint_fast64_t> _timestamps;
+            std::vector<uint64_t> _timestamps;
     };
 
     /// make_maskIsolated creates a MaskIsolated from a functor.

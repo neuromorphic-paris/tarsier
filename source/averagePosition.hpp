@@ -15,7 +15,7 @@ namespace tarsier {
         /// y represents the coordinate of the flow on the sensor grid alongside the vertical axis.
         /// y is 0 on the bottom, and increases bottom to top.
         double y;
-    };
+    } __attribute__((packed));
 
     /// AveragePosition calculates the average position of the given events.
     /// An exponential event-wise decay is used as weight.
