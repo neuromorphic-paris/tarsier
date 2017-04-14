@@ -25,7 +25,8 @@ namespace tarsier {
             AveragePosition(const double& inertia, const std::size_t& eventsToReceive, HandlePosition handlePosition) :
                 _inertia(inertia),
                 _eventsToReceive(eventsToReceive),
-                _handlePosition(std::forward<HandlePosition>(handlePosition))
+                _handlePosition(std::forward<HandlePosition>(handlePosition)),
+                _position(Position{0.0, 0.0})
             {
                 if (_inertia < 0 || _inertia > 1) {
                     throw std::logic_error("inertia must be in the range [0, 1]");
