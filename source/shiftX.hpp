@@ -25,7 +25,7 @@ namespace tarsier {
                 const auto shifted = static_cast<int64_t>(event.x) + shift;
                 if (shifted >= 0 && static_cast<uint64_t>(shifted) < width) {
                     event.x = shifted;
-                    _handleEvent(std::move(event));
+                    _handleEvent(event);
                 }
             }
 
