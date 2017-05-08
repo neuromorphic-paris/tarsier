@@ -10,7 +10,7 @@ namespace tarsier {
     template <typename Event, typename HandleEvent>
     class SelectDisk {
         public:
-            SelectDisk(const double& centerX, const double& centerY, const double& radius, HandleEvent handleEvent) :
+            SelectDisk(double centerX, double centerY, double radius, HandleEvent handleEvent) :
                 _centerX(centerX),
                 _centerY(centerY),
                 _squaredRadius(std::pow(radius, 2)),
@@ -39,7 +39,7 @@ namespace tarsier {
 
     /// make_selectDisk creates a SelectDisk from a functor.
     template<typename Event, typename HandleEvent>
-    SelectDisk<Event, HandleEvent> make_selectDisk(const double& centerX, const double& centerY, const double& radius, HandleEvent handleEvent) {
+    SelectDisk<Event, HandleEvent> make_selectDisk(double centerX, double centerY, double radius, HandleEvent handleEvent) {
         return SelectDisk<Event, HandleEvent>(centerX, centerY, radius, std::forward<HandleEvent>(handleEvent));
     }
 }

@@ -23,7 +23,7 @@ namespace tarsier {
             /// operator() handles an event.
             virtual void operator()(Event event) {
                 event.y = height - 1 - event.y;
-                _handleEvent(std::move(event));
+                _handleEvent(event);
             }
 
         protected:
