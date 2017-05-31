@@ -144,7 +144,7 @@ namespace tarsier {
     {}
 
     virtual void operator()(Event ev){
-      this->_memory[ev.p*X*(ev.x*Y+ev.y)] = static_cast<int64_t>(ev.t);
+      this->_memory[ev.p*X*Y + ev.y*X + ev.x] = static_cast<int64_t>(ev.t);
       uint64_t cpt = 0;
 
       for(int64_t p = 0; p < nP; p++){
@@ -155,15 +155,14 @@ namespace tarsier {
               y <= static_cast<int64_t>(ev.y)+radius;
               y++){
             if(x >= 0 && x < X & y >= 0 && y < Y){
-              this->_context[cpt++] = this->_kernel(ev,Event{this->_memory[p*X*(x*Y+y)], x, y, p});
+              this->_context[cpt++] = this->_kernel(ev,Event{this->_memory[p*X*Y + y*X + x], x, y, p});
             }else{
               this->_context[cpt++] = 0;
             }
           }
         }
-
-        this->_handlerTimeSurfaceGenerator(this->_timeSurfaceEventFromEvent(ev,this->_context));
       }
+      this->_handlerTimeSurfaceGenerator(this->_timeSurfaceEventFromEvent(ev,this->_context));
     }
   };
 
