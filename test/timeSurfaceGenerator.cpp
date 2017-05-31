@@ -2,29 +2,88 @@
 
 #include "catch.hpp"
 
-struct Event{
-  uint64_t t;
+struct Event1d{ // minimum field require to build 1D TS
+  int64_t t;
   int64_t x;
   int64_t p;
 };
 
-struct TsEvent{
-  uint64_t t;
+struct TsEvent1d{
+  int64_t t;
   int64_t x;
   int64_t p;
-  std::vector<int64_t> listOfP;
   std::vector<double> context;
 };
 
-struct HotsEvent{
-  uint64_t t;
+struct Event2d{ // minimum field require to build 2D TS
+  int64_t t;
   int64_t x;
+  int64_t y;
   int64_t p;
-  std::vector<int64_t> listOfP;
 };
 
-TEST_CASE("Compute 1D and 2D timeSurfaces from the given events", "[TimeSurface]") {
-  
+struct TsEvent2d{
+  int64_t t;
+  int64_t x;
+  int64_t y;
+  int64_t p;
+  std::vector<double> context;
+};
+
+TEST_CASE("Compute 1D timeSurfaces from the given events", "[TimeSurface]") {
+  auto tsEvent1dFromEvent = [](Event1d ev, std::vector<double> context){
+    return TsEvent1d{ev.t, ev.x, ev.p, context};
+  };
+  auto kernel1d = [](Event1d evRef, Event1d evNeighbor){
+    auto diff = static_cast<double>(evRef.t)-static_cast<double>(evNeighbor.t);
+    return (diff < 3*100.) ? exp(-(diff)/100.) : 0;
+  };
+  bool go = false;
+  auto handlerTimeSurface1d = [&go](TsEvent1d ev){
+    if(go){
+      std::cout << "J'ai recu un event 1d" << std::endl;
+      for(auto&& it: ev.context){
+        std::cout << it << " ";
+      }
+      std::cout << std::endl;
+    }
+  };
+  /*
+  auto tsEvent2dFromEvent = [](Event2d ev, std::vector<double> context){
+    return TsEvent2d{ev.t, ev.x, ev.y, ev.p, context};
+  };
+  auto kernel2d = [](Event2d evRef, Event2d evNeighbor){
+    auto diff = static_cast<double>(evRef.t)-static_cast<double>(evNeighbor.t);
+    return (diff < 3*100.) ? exp(-(diff)/100.) : 0;
+  };
+
+  auto handlerTimeSurface2d = [&go](TsEvent2d ev){
+    if(go){
+      std::cout << "J'ai recu un event 2d" << std::endl;
+      for(auto&& it: ev.context){
+        std::cout << it << " ";
+      }
+      std::cout << std::endl;
+    }
+    };*/
+
+  auto myTs1d = tarsier::make_timeSurfaceGenerator<200, 2, 5,-10000, Event1d, TsEvent1d>(kernel1d, tsEvent1dFromEvent, handlerTimeSurface1d);
+  // auto myTs2d = tarsier::make_timeSurfaceGenerator<200, 200, 2, 5,-10000, Event2d, TsEvent2d>(kernel2d, tsEvent2dFromEvent, handlerTimeSurface2d);
+
+  myTs1d(Event1d{0, 10, 1});
+  myTs1d(Event1d{10, 9, 1});
+  myTs1d(Event1d{20, 8, 0});
+  myTs1d(Event1d{30, 9, 0});
+  myTs1d(Event1d{40, 10, 0});
+  myTs1d(Event1d{50, 11, 0});
+  myTs1d(Event1d{60, 12, 0});
+  myTs1d(Event1d{70, 13, 0});
+  myTs1d(Event1d{80, 12, 1});
+  myTs1d(Event1d{90, 11, 1});
+  go = true;
+  myTs1d(Event1d{100, 10, 1});
+  go = false;
+
 
   /*auto flowEventGenerated = false;
     auto computeFlow = tarsier::make_computeFlow<Event, FlowEvent, 304, 240, 2, 10, 1000000>(

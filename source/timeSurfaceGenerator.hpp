@@ -17,7 +17,7 @@ namespace tarsier {
     int64_t initMemory,
     typename Event,
     typename TimeSurfaceEvent,
-    typename Kernel, // double f(Event, double neighbor)
+    typename Kernel, // double f(Event ref, Event neighbor)
     typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
     typename HandlerTimeSurfaceGenerator //  void f(TimeSurfaceEvent)
     >
@@ -54,7 +54,7 @@ namespace tarsier {
     int64_t initMemory,
     typename Event, // require at least a field .t .x .p
     typename TimeSurfaceEvent,
-    typename Kernel, // double f(Event, double neighbor)
+    typename Kernel, // double f(Event ref, Event neighbor)
     typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
     typename HandlerTimeSurfaceGenerator //  void f(TimeSurfaceEvent)
     >
@@ -93,7 +93,7 @@ namespace tarsier {
             x <= static_cast<int64_t>(ev.x)+radius;
             x++){
           if(x >= 0 && x < X){
-            this->_context[cpt++] = this->_kernel(ev,static_cast<double>(this->_memory[p*X+x]));
+            this->_context[cpt++] = this->_kernel(ev,Event{this->_memory[p*X+x], x, p});
           }else{
             this->_context[cpt++] = 0;
           }
@@ -113,7 +113,7 @@ namespace tarsier {
     int64_t initMemory,
     typename Event, // require at least a field .t .x .y .p
     typename TimeSurfaceEvent,
-    typename Kernel, // double f(Event, double neighbor)
+    typename Kernel, // double f(Event ref, Event neighbor)
     typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
     typename HandlerTimeSurfaceGenerator //  void f(TimeSurfaceEvent)
     >
@@ -144,7 +144,7 @@ namespace tarsier {
     {}
 
     virtual void operator()(Event ev){
-      this->_memory[ev.p*X(ev.x*Y+ev.y)] = static_cast<int64_t>(ev.t);
+      this->_memory[ev.p*X*(ev.x*Y+ev.y)] = static_cast<int64_t>(ev.t);
       uint64_t cpt = 0;
 
       for(int64_t p = 0; p < nP; p++){
@@ -155,7 +155,7 @@ namespace tarsier {
               y <= static_cast<int64_t>(ev.y)+radius;
               y++){
             if(x >= 0 && x < X & y >= 0 && y < Y){
-              this->_context[cpt++] = this->_kernel(ev,static_cast<double>(this->_memory[p*X*(x*Y+y)]));
+              this->_context[cpt++] = this->_kernel(ev,Event{this->_memory[p*X*(x*Y+y)], x, y, p});
             }else{
               this->_context[cpt++] = 0;
             }
@@ -178,7 +178,7 @@ namespace tarsier {
     int64_t initMemory,
     typename Event, //Requires at least a field .t, .x, .p
     typename TimeSurfaceEvent,
-    typename Kernel, // double f(Event, double neighbor)
+    typename Kernel, // double f(Event ref, Event neighbor)
     typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
     typename HandlerTimeSurfaceGenerator // void f(TimeSurfaceEvent)
     >
@@ -219,7 +219,7 @@ namespace tarsier {
     int64_t initMemory,
     typename Event, //Requires at least a field .t, .x, .y, .p
     typename TimeSurfaceEvent,
-    typename Kernel, // double f(Event, double neighbor)
+    typename Kernel, // double f(Event ref, Event neighbor)
     typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
     typename HandlerTimeSurfaceGenerator // void f(TimeSurfaceEvent)
     >
