@@ -6,6 +6,7 @@
 #include <cmath>
 #include <utility>
 #include <vector>
+#include <numeric>
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
