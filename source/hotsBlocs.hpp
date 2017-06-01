@@ -23,27 +23,52 @@ namespace tarsier {
     >
   class IiwkClustering{
   public:
-    IiwkClustering(double ksi,
+    IiwkClustering(double ksi1,
+                   double ksi2,
                    double npow,
                    IiwkClusteringMetric iiwkClusteringMetric,
                    IiwkClusteringEventFromEvent iiwkClusteringEventFromEvent,
                    HandlerIiwkClustering handlerIiwkClustering):
-      _ksi(ksi),
+      _ksi1(ksi1),
+      _ksi2(ksi2),
       _npow(npow),
       _sumOfDistances(0.),
       _iiwkClusteringMetric(std::forward<IiwkClusteringMetric>(iiwkClusteringMetric)),
       _iiwkClusteringEventFromEvent(std::forward<IiwkClusteringEventFromEvent>(iiwkClusteringEventFromEvent)),
       _handlerIiwkClustering(std::forward<HandlerIiwkClustering>(handlerIiwkClustering)),
       _distances(nCenters,0.),
-      _centers(nCenters,std::vector<double>(neighborhood,1./static_cast<double>(neighborhood)))
+      _centers(nCenters,std::vector<double>(neighborhood,0.5)),
+      _sumOfCenters(nCenters,0.5*neighborhood)
     {}
 
     virtual ~IiwkClustering(){}
-    virtual double& getKsi(){
-      return _ksi;
+    virtual double& getKsi1(){
+      return _ksi2;
+    }
+    virtual double& getKsi2(){
+      return _ksi2;
     }
     virtual double& getNpow(){
       return _npow;
+    }
+    virtual std::vector<std::vector<double> > getCenters() const{
+      return _centers;
+    }
+    virtual void setCenters(std::vector<std::vector<double> > newCenters){
+      if(newCenters.size() != _centers.size()){
+        std::cout << "Error: waiting for centers of size " << _centers.size() << " instead of " << newCenters.size() << std::endl;
+      }else if(newCenters[0].size() != _centers[0].size()){
+        std::cout << "Error: waiting for centers of neighborhood size " << _centers[0].size() << " instead of " << newCenters[0].size() << std::endl;
+      }
+      _centers = newCenters;
+      auto cpt = 0;
+      for(auto&& it: _centers){
+        _sumOfCenters[cpt] = 0.;
+        for(auto&& it2: it){
+          _sumOfCenters[cpt]+=it2;
+        }
+        cpt++;
+      }
     }
 
     virtual void operator()(Event ev){
@@ -59,8 +84,12 @@ namespace tarsier {
       }
 
       for(uint64_t i = 0; i < nCenters; i++){
-        _distances[i] = _iiwkClusteringMetric(_centers[i].begin(),
-                                              _centers[i].end(),
+        auto curCenter = _centers[i];
+        for(auto&& it: curCenter){
+          it/=_sumOfCenters[i];
+        }
+        _distances[i] = _iiwkClusteringMetric(curCenter.begin(),
+                                              curCenter.end(),
                                               context.begin()
                                               );
 
@@ -72,24 +101,36 @@ namespace tarsier {
       }
 
       /// Update
-      double coeff = _ksi*(
-                           (_npow+1)*std::pow(_distances[out_p],_npow-1)
-                           +_npow*std::pow(_distances[out_p], _npow-2)*(_sumOfDistances-_distances[out_p])
-                           );
+      if(minimum != 0){
+        double coeff = _ksi1*(
+                              (_npow+1)*std::pow(minimum,_npow-1)
+                              +_npow*std::pow(minimum, _npow-2)*(_sumOfDistances-minimum)
+                              );
+        coeff = (coeff > 1) ? 1: coeff;
+        double curCoeff;
 
-      auto sumOfCenter = 0.;
-      auto cpt = 0;
-      for(auto&& it: _centers[out_p]){
-        it+=coeff*(context[cpt++]-it);
-        if(it < 0){
-          it = 0;
-        }else{
-          sumOfCenter+=it;
+        for(int64_t i = 0; i < nCenters; i++){
+          if(i != out_p){
+            curCoeff = _ksi2*std::pow(minimum,_npow)/_distances[i];
+          }else{
+            curCoeff = coeff;
+          }
+          auto sumOfCenter = 0.;
+          auto cpt = 0;
+          for(auto&& it: _centers[i]){
+            it+=curCoeff*(ev.context[cpt]-it);
+            if(it <= 0){
+              it = 0;
+            }else{
+              if(it > 1){
+                it = 1;
+              }
+            }
+            sumOfCenter+=it;
+            cpt++;
+          }
+          _sumOfCenters[i] = sumOfCenter;
         }
-      }
-
-      for(auto&& it: _centers[out_p]){
-        it/=sumOfCenter;
       }
 
       /// Send
@@ -97,7 +138,8 @@ namespace tarsier {
     }
 
   protected:
-    double _ksi;
+    double _ksi1;
+    double _ksi2;
     double _npow;
     double _sumOfDistances;
     IiwkClusteringMetric _iiwkClusteringMetric;
@@ -106,6 +148,7 @@ namespace tarsier {
 
     std::vector<double> _distances;
     std::vector<std::vector<double> > _centers;
+    std::vector<double> _sumOfCenters;
   };
 
   //------------------------------------------------------------------------------------------\\
@@ -133,63 +176,102 @@ namespace tarsier {
       _standardClusteringEventFromEvent(std::forward<StandardClusteringEventFromEvent>(standardClusteringEventFromEvent)),
       _handlerStandardClustering(std::forward<HandlerStandardClustering>(handlerStandardClustering)),
       _distances(nCenters,0.),
-      _centers(nCenters,std::vector<double>(neighborhood,1./static_cast<double>(neighborhood))),
-      _activity(nCenters,0)
+      _centers(nCenters,std::vector<double>(neighborhood,0.5)),
+      _activity(nCenters,0),
+      _sumOfCenters(nCenters,0.5*neighborhood),
+      _first(0)
     {}
 
     virtual ~StandardClustering() {}
+    virtual double& getBaseLearningRate(){
+      return _baseLearningRate;
+    }
+    virtual double& getBaseLearningActivity(){
+      return _baseLearningActivity;
+    }
+    virtual std::vector<std::vector<double> > getCenters() const{
+      return _centers;
+    }
+    virtual void setCenters(std::vector<std::vector<double> > newCenters){
+      if(newCenters.size() != _centers.size()){
+        std::cout << "Error: waiting for centers of size " << _centers.size() << " instead of " << newCenters.size() << std::endl;
+      }else if(newCenters[0].size() != _centers[0].size()){
+        std::cout << "Error: waiting for centers of neighborhood size " << _centers[0].size() << " instead of " << newCenters[0].size() << std::endl;
+      }
+      _centers = newCenters;
+      auto cpt = 0;
+      for(auto&& it: _centers){
+        _sumOfCenters[cpt] = 0.;
+        for(auto&& it2: it){
+          _sumOfCenters[cpt]+=it2;
+        }
+        cpt++;
+      }
+    }
 
     virtual void operator()(Event ev){
       /// Clustering
       double minimum;
       int64_t out_p;
 
-      auto context = ev.context;
-      auto sumOfContext = std::accumulate(context.begin(), context.end(), 0.);
-      // auto power = sumOfContext/static_cast<double>(context.size());
-      for(auto&& it: context){
-        it/=sumOfContext;
-      }
-
-      for(uint64_t i = 0; i < nCenters; i++){
-        _distances[i] = _standardClusteringMetric(_centers[i].begin(),
-                                                  _centers[i].end(),
-                                                  context.begin()
-                                                  );
-
-        if(i == 0 || minimum > _distances[i]){
-          minimum = _distances[i];
-          out_p = i;
+      if(_first >= nCenters){
+        auto context = ev.context;
+        auto sumOfContext = std::accumulate(context.begin(), context.end(), 0.);
+        for(auto&& it: context){
+          it/=sumOfContext;
         }
-      }
-      _activity[out_p]++;
+        for(uint64_t i = 0; i < nCenters; i++){
+          auto curCenter = _centers[i];
+          for(auto&& it: curCenter){
+            it/=_sumOfCenters[i];
+          }
+          _distances[i] = _standardClusteringMetric(curCenter.begin(),
+                                                    curCenter.end(),
+                                                    context.begin()
+                                                    );
 
-      /// Update
-      auto cpt = 0;
-      auto scal_prod = 0., scal_context = 0., scal_center = 0.;
-      for(auto&& it: _centers[out_p]){
-        scal_prod+=(it*context[cpt]);
-        scal_center+=(it*it);
-        scal_context+=(context[cpt]*context[cpt]);
-        cpt++;
-      }
-      auto beta = scal_prod / sqrt(scal_center*scal_context);
-      auto alpha = _baseLearningRate * (1 - _activity[out_p]/_baseLearningActivity);
-      alpha = (alpha > 0.) ? alpha : 0.;
-
-      auto sumOfCenter = 0.;
-      cpt = 0;
-      for(auto&& it: _centers[out_p]){
-        it+=alpha*beta*(context[cpt++]-it);
-        if(it < 0){
-          it = 0;
-        }else{
-          sumOfCenter+=it;
+          if(i == 0 || minimum > _distances[i]){
+            minimum = _distances[i];
+            out_p = i;
+          }
         }
-      }
 
-      for(auto&& it: _centers[out_p]){
-        it/=sumOfCenter;
+        _activity[out_p]++;
+        /// Update
+        auto cpt = 0;
+        auto scal_prod = 0., scal_context = 0., scal_center = 0.;
+        for(auto&& it: _centers[out_p]){
+          scal_prod+=(it*ev.context[cpt]);
+          scal_center+=(it*it);
+          scal_context+=(ev.context[cpt]*ev.context[cpt]);
+          cpt++;
+        }
+        auto beta = scal_prod / sqrt(scal_center*scal_context);
+        auto alpha = _baseLearningRate * (1 - _activity[out_p]/_baseLearningActivity);
+        alpha = (alpha > 0.) ? alpha : 0.;
+
+        auto sumOfCenter = 0.;
+        cpt = 0;
+        for(auto&& it: _centers[out_p]){
+          it+=alpha*beta*(ev.context[cpt++]-it);
+          if(it < 0){
+            it = 0;
+          }else{
+            if(it > 1){
+              it = 1;
+            }
+            sumOfCenter+=it;
+          }
+        }
+        _sumOfCenters[out_p] = sumOfCenter;
+      }else{
+        out_p = _first++;
+        auto cpt = 0;
+        _sumOfCenters[out_p] = 0.;
+        for(auto&& it: _centers[out_p]){
+          it = ev.context[cpt++];
+          _sumOfCenters[out_p]+=it;
+        }
       }
 
       /// Send
@@ -206,6 +288,8 @@ namespace tarsier {
     std::vector<double> _distances;
     std::vector<std::vector<double> > _centers;
     std::vector<int64_t> _activity;
+    std::vector<double> _sumOfCenters;
+    int _first;
   };
 
   //------------------------------------------------------------------------------------------\\
@@ -227,7 +311,8 @@ namespace tarsier {
                  IiwkClusteringMetric,
                  IiwkClusteringEventFromEvent,
                  HandlerIiwkClustering>
-  make_iiwkClustering(double ksi,
+  make_iiwkClustering(double ksi1,
+                      double ksi2,
                       double npow,
                       IiwkClusteringMetric iiwkClusteringMetric,
                       IiwkClusteringEventFromEvent iiwkClusteringEventFromEvent,
@@ -240,7 +325,8 @@ namespace tarsier {
                           IiwkClusteringMetric,
                           IiwkClusteringEventFromEvent,
                           HandlerIiwkClustering>
-      (ksi,
+      (ksi1,
+       ksi2,
        npow,
        std::forward<IiwkClusteringMetric>(iiwkClusteringMetric),
        std::forward<IiwkClusteringEventFromEvent>(iiwkClusteringEventFromEvent),
