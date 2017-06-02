@@ -110,7 +110,7 @@ namespace tarsier {
             std::vector<uint64_t> _timestamps;
     };
 
-    /// make_computeStitch creates a Stitch from functors.
+    /// make_computeFlow creates an optical flow estimator from functors.
     template <
         typename Event,
         typename FlowEvent,
@@ -122,10 +122,8 @@ namespace tarsier {
         typename FlowEventFromEvent,
         typename HandleFlowEvent
     >
-    ComputeFlow<Event, FlowEvent, width, height, window, numberOfMostRecentEvents, lifespan, FlowEventFromEvent, HandleFlowEvent> make_computeFlow(
-        FlowEventFromEvent flowEventFromEvent,
-        HandleFlowEvent handleFlowEvent
-    ) {
+    ComputeFlow<Event, FlowEvent, width, height, window, numberOfMostRecentEvents, lifespan, FlowEventFromEvent, HandleFlowEvent> 
+    make_computeFlow(lowEventFromEvent flowEventFromEvent, HandleFlowEvent handleFlowEvent) {
         return ComputeFlow<Event, FlowEvent, width, height, window, numberOfMostRecentEvents, lifespan, FlowEventFromEvent, HandleFlowEvent>(
             std::forward<FlowEventFromEvent>(flowEventFromEvent),
             std::forward<HandleFlowEvent>(handleFlowEvent)
