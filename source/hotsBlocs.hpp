@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <cmath>
 #include <utility>
-#include <vector>
+#include <array>
 #include <numeric>
 
 /// tarsier is a collection of event handlers.
@@ -36,26 +36,24 @@ namespace tarsier {
       _sumOfDistances(0.),
       _iiwkClusteringMetric(std::forward<IiwkClusteringMetric>(iiwkClusteringMetric)),
       _iiwkClusteringEventFromEvent(std::forward<IiwkClusteringEventFromEvent>(iiwkClusteringEventFromEvent)),
-      _handlerIiwkClustering(std::forward<HandlerIiwkClustering>(handlerIiwkClustering)),
-      _distances(nCenters,0.),
-      _centers(nCenters,std::vector<double>(neighborhood,0.5)),
-      _sumOfCenters(nCenters,0.5*neighborhood)
-    {}
+      _handlerIiwkClustering(std::forward<HandlerIiwkClustering>(handlerIiwkClustering))
+    {
+      for(auto&& it: _distances){
+        it = 0.;
+      }
+      for(auto&& it: _centers){
+        for(auto&& it2: it){
+          it2 = 0.5;
+        }
+      }
+      for(auto&& it: _sumOfCenters){
+        it = 0.5*neighborhood;
+      }
+    }
 
     virtual ~IiwkClustering(){}
-    virtual double& getKsi1(){
-      return _ksi2;
-    }
-    virtual double& getKsi2(){
-      return _ksi2;
-    }
-    virtual double& getNpow(){
-      return _npow;
-    }
-    virtual std::vector<std::vector<double> > getCenters() const{
-      return _centers;
-    }
-    virtual void setCenters(std::vector<std::vector<double> > newCenters){
+
+    /*virtual void setCenters(std::vector<std::vector<double> > newCenters){
       if(newCenters.size() != _centers.size()){
         std::cout << "Error: waiting for centers of size " << _centers.size() << " instead of " << newCenters.size() << std::endl;
       }else if(newCenters[0].size() != _centers[0].size()){
@@ -70,7 +68,7 @@ namespace tarsier {
         }
         cpt++;
       }
-    }
+    }*/
 
     virtual void operator()(Event ev){
       /// Clustering
@@ -147,9 +145,9 @@ namespace tarsier {
     IiwkClusteringEventFromEvent _iiwkClusteringEventFromEvent;
     HandlerIiwkClustering _handlerIiwkClustering;
 
-    std::vector<double> _distances;
-    std::vector<std::vector<double> > _centers;
-    std::vector<double> _sumOfCenters;
+    std::array<double, nCenters> _distances;
+    std::array<std::array<double, neighborhood>, nCenters> _centers;
+    std::array<double, nCenters> _sumOfCenters;
   };
 
   //------------------------------------------------------------------------------------------\\
@@ -176,24 +174,27 @@ namespace tarsier {
       _standardClusteringMetric(std::forward<StandardClusteringMetric>(standardClusteringMetric)),
       _standardClusteringEventFromEvent(std::forward<StandardClusteringEventFromEvent>(standardClusteringEventFromEvent)),
       _handlerStandardClustering(std::forward<HandlerStandardClustering>(handlerStandardClustering)),
-      _distances(nCenters,0.),
-      _centers(nCenters,std::vector<double>(neighborhood,0.5)),
-      _activity(nCenters,0),
-      _sumOfCenters(nCenters,0.5*neighborhood),
       _first(0)
-    {}
+    {
+      for(auto&& it: _distances){
+        it = 0.;
+      }
+      for(auto&& it: _centers){
+        for(auto&& it2: it){
+          it2 = 0.5;
+        }
+      }
+      for(auto&& it: _activity){
+        it = 0;
+      }
+      for(auto&& it: _sumOfCenters){
+        it = 0.5*neighborhood;
+      }
+    }
 
     virtual ~StandardClustering() {}
-    virtual double& getBaseLearningRate(){
-      return _baseLearningRate;
-    }
-    virtual double& getBaseLearningActivity(){
-      return _baseLearningActivity;
-    }
-    virtual std::vector<std::vector<double> > getCenters() const{
-      return _centers;
-    }
-    virtual void setCenters(std::vector<std::vector<double> > newCenters){
+
+    /*virtual void setCenters(std::vector<std::vector<double> > newCenters){
       if(newCenters.size() != _centers.size()){
         std::cout << "Error: waiting for centers of size " << _centers.size() << " instead of " << newCenters.size() << std::endl;
       }else if(newCenters[0].size() != _centers[0].size()){
@@ -208,7 +209,7 @@ namespace tarsier {
         }
         cpt++;
       }
-    }
+    }*/
 
     virtual void operator()(Event ev){
       /// Clustering
@@ -286,10 +287,10 @@ namespace tarsier {
     StandardClusteringEventFromEvent _standardClusteringEventFromEvent;
     HandlerStandardClustering _handlerStandardClustering;
 
-    std::vector<double> _distances;
-    std::vector<std::vector<double> > _centers;
-    std::vector<int64_t> _activity;
-    std::vector<double> _sumOfCenters;
+    std::array<double, nCenters> _distances;
+    std::array<std::array<double, neighborhood>, nCenters> _centers;
+    std::array<int64_t, nCenters> _activity;
+    std::array<double, nCenters> _sumOfCenters;
     int _first;
   };
 
