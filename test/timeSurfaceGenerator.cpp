@@ -2,6 +2,15 @@
 
 #include "catch.hpp"
 
+#define RADIUS_1D 5
+#define RADIUS_2D 2
+#define NP 2
+#define CONTEXT_SIZE_1D (2*RADIUS_1D + 1)*NP
+#define CONTEXT_SIZE_2D (2*RADIUS_2D + 1)*(2*RADIUS_2D + 1)*NP
+#define XSIZE 200
+#define YSIZE 200
+#define INIT_MEMORY -1000
+
 struct Event1d{ // minimum field require to build 1D TS
   int64_t t;
   int64_t x;
@@ -12,7 +21,7 @@ struct TsEvent1d{
   int64_t t;
   int64_t x;
   int64_t p;
-  std::vector<double> context;
+  std::array<double, CONTEXT_SIZE_1D> context;
 };
 
 struct Event2d{ // minimum field require to build 2D TS
@@ -27,11 +36,11 @@ struct TsEvent2d{
   int64_t x;
   int64_t y;
   int64_t p;
-  std::vector<double> context;
+  std::array<double, CONTEXT_SIZE_2D> context;
 };
 
 TEST_CASE("Compute 1D timeSurfaces from the given events", "[TimeSurface]") {
-  auto tsEvent1dFromEvent = [](Event1d ev, std::vector<double> context){
+  auto tsEvent1dFromEvent = [](Event1d ev, std::array<double, CONTEXT_SIZE_1D> context){
     return TsEvent1d{ev.t, ev.x, ev.p, context};
   };
   auto kernel1d = [](Event1d evRef, Event1d evNeighbor){
@@ -41,7 +50,7 @@ TEST_CASE("Compute 1D timeSurfaces from the given events", "[TimeSurface]") {
   bool go = false;
   auto handlerTimeSurface1d = [&go](TsEvent1d ev){
     if(go){
-      std::vector<double> vec = {0, 0, 0, 0.4493, 0.4966, 0.5488, 0.6065, 0.6703, 0.7408, 0, 0, 0, 0, 0, 0, 0.4066, 1.0000, 0.9048, 0.8187, 0, 0, 0};
+      std::array<double, CONTEXT_SIZE_1D> vec = {0, 0, 0, 0.4493, 0.4966, 0.5488, 0.6065, 0.6703, 0.7408, 0, 0, 0, 0, 0, 0, 0.4066, 1.0000, 0.9048, 0.8187, 0, 0, 0};
       auto cpt = 0;
       auto sum = 0.;
       for(auto&& it: ev.context){
@@ -53,7 +62,7 @@ TEST_CASE("Compute 1D timeSurfaces from the given events", "[TimeSurface]") {
     }
   };
 
-  auto tsEvent2dFromEvent = [](Event2d ev, std::vector<double> context){
+  auto tsEvent2dFromEvent = [](Event2d ev, std::array<double, CONTEXT_SIZE_2D> context){
     return TsEvent2d{ev.t, ev.x, ev.y, ev.p, context};
   };
   auto kernel2d = [](Event2d evRef, Event2d evNeighbor){
@@ -63,15 +72,16 @@ TEST_CASE("Compute 1D timeSurfaces from the given events", "[TimeSurface]") {
 
   auto handlerTimeSurface2d = [&go](TsEvent2d ev){
     if(go){
-      std::vector<double> vec = {0,0,0,0,0, 0.4966,0,0,0,0,
-                                 0,0.6703,0.9048,0,0,
-                                 0,0,0,0,0,
-                                 0,0,0,0,0,
-                                 0.4493,0,0,0,0,
-                                 0,0,0,0,0,
-                                 0,0.5488,1.0000,0,0.8187,
-                                 0,0,0.6065,0,0,
-                                 0,0,0,0,0};
+      std::array<double, CONTEXT_SIZE_2D> vec{0,0,0,0,0,
+                                              0.4966,0,0,0,0,
+                                              0,0.6703,0.9048,0,0,
+                                              0,0,0,0,0,
+                                              0,0,0,0,0,
+                                              0.4493,0,0,0,0,
+                                              0,0,0,0,0,
+                                              0,0.5488,1.0000,0,0.8187,
+                                              0,0,0.6065,0,0,
+                                              0,0,0,0,0};
       auto cpt = 0;
       auto sum = 0.;
       for(auto&& it: ev.context){
@@ -83,8 +93,8 @@ TEST_CASE("Compute 1D timeSurfaces from the given events", "[TimeSurface]") {
     }
   };
 
-  auto myTs1d = tarsier::make_timeSurfaceGenerator<200, 2, 5,-10000, Event1d, TsEvent1d>(kernel1d, tsEvent1dFromEvent, handlerTimeSurface1d);
-  auto myTs2d = tarsier::make_timeSurfaceGenerator<200, 200, 2, 2,-10000, Event2d, TsEvent2d>(kernel2d, tsEvent2dFromEvent, handlerTimeSurface2d);
+  auto myTs1d = tarsier::make_timeSurfaceGenerator<XSIZE, NP, RADIUS_1D,-10000, Event1d, TsEvent1d>(kernel1d, tsEvent1dFromEvent, handlerTimeSurface1d);
+  auto myTs2d = tarsier::make_timeSurfaceGenerator<XSIZE, YSIZE, NP, RADIUS_2D, INIT_MEMORY, Event2d, TsEvent2d>(kernel2d, tsEvent2dFromEvent, handlerTimeSurface2d);
 
   myTs1d(Event1d{0, 10, 1});
   myTs1d(Event1d{10, 9, 1});

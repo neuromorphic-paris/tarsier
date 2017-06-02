@@ -6,6 +6,7 @@
 #include <cmath>
 #include <utility>
 #include <vector>
+#include <array>
 #include <numeric>
 
 /// tarsier is a collection of event handlers.
@@ -29,10 +30,15 @@ namespace tarsier {
                          HandlerTimeSurfaceGenerator handlerTimeSurfaceGenerator):
       _kernel(std::forward<Kernel>(kernel)),
       _timeSurfaceEventFromEvent(std::forward<TimeSurfaceEventFromEvent>(timeSurfaceEventFromEvent)),
-      _handlerTimeSurfaceGenerator(std::forward<HandlerTimeSurfaceGenerator>(handlerTimeSurfaceGenerator)),
-      _memory(memorySize,initMemory),
-      _context(contextSize,0.)
-    {}
+      _handlerTimeSurfaceGenerator(std::forward<HandlerTimeSurfaceGenerator>(handlerTimeSurfaceGenerator))
+    {
+      for(auto&& it: _memory){
+        it = initMemory;
+      }
+      for(auto&& it: _context){
+        it = 0.;
+      }
+    }
 
     virtual ~TimeSurfaceGenerator(){}
 
@@ -43,8 +49,8 @@ namespace tarsier {
     TimeSurfaceEventFromEvent _timeSurfaceEventFromEvent;
     HandlerTimeSurfaceGenerator _handlerTimeSurfaceGenerator;
 
-    std::vector<int64_t> _memory;
-    std::vector<double> _context;
+    std::array<int64_t, memorySize> _memory;
+    std::array<double, contextSize> _context;
   };
 
   /// 1D TimeSurfaceGenerator
