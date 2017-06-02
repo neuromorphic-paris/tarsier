@@ -11,32 +11,31 @@
 /// tarsier is a collection of event handlers.
 namespace tarsier {
 
-  /// IiwkClustering
-
+  /// IiwkCluster
   template<
     uint64_t nCenters,
     std::size_t neighborhood,
     typename Event, // require at least a field .context
-    typename IiwkClusteringEvent,
-    typename IiwkClusteringMetric, // double f(std::vector<double> iterator center begin,std::vector<double> iterator center end,std::vector<double> iterator context begin)
-    typename IiwkClusteringEventFromEvent, // IiwkClusteringEvent f(Event,out_polarity)
-    typename HandlerIiwkClustering // void f(IiwkClusteringEvent)
+    typename IiwkClusterEvent,
+    typename IiwkClusterMetric, // double f(std::array<double,neighborhood> iterator center begin,std::array<double,neighborhood> iterator center end,std::array<double,neighborhood> iterator context begin)
+    typename IiwkClusterEventFromEvent, // IiwkClusterEvent f(Event,out_polarity)
+    typename HandlerIiwkCluster // void f(IiwkClusterEvent)
     >
-  class IiwkClustering{
+  class IiwkCluster{
   public:
-    IiwkClustering(double ksi1,
+    IiwkCluster(double ksi1,
                    double ksi2,
                    double npow,
-                   IiwkClusteringMetric iiwkClusteringMetric,
-                   IiwkClusteringEventFromEvent iiwkClusteringEventFromEvent,
-                   HandlerIiwkClustering handlerIiwkClustering):
+                   IiwkClusterMetric iiwkClusterMetric,
+                   IiwkClusterEventFromEvent iiwkClusterEventFromEvent,
+                   HandlerIiwkCluster handlerIiwkCluster):
       _ksi1(ksi1),
       _ksi2(ksi2),
       _npow(npow),
       _sumOfDistances(0.),
-      _iiwkClusteringMetric(std::forward<IiwkClusteringMetric>(iiwkClusteringMetric)),
-      _iiwkClusteringEventFromEvent(std::forward<IiwkClusteringEventFromEvent>(iiwkClusteringEventFromEvent)),
-      _handlerIiwkClustering(std::forward<HandlerIiwkClustering>(handlerIiwkClustering))
+      _iiwkClusterMetric(std::forward<IiwkClusterMetric>(iiwkClusterMetric)),
+      _iiwkClusterEventFromEvent(std::forward<IiwkClusterEventFromEvent>(iiwkClusterEventFromEvent)),
+      _handlerIiwkCluster(std::forward<HandlerIiwkCluster>(handlerIiwkCluster))
     {
       for(auto&& it: _distances){
         it = 0.;
@@ -51,9 +50,9 @@ namespace tarsier {
       }
     }
 
-    virtual ~IiwkClustering(){}
+    virtual ~IiwkCluster(){}
 
-    /*virtual void setCenters(std::vector<std::vector<double> > newCenters){
+    /*virtual void setCenters(std::vector<std::array<double,neighborhood> > newCenters){
       if(newCenters.size() != _centers.size()){
         std::cout << "Error: waiting for centers of size " << _centers.size() << " instead of " << newCenters.size() << std::endl;
       }else if(newCenters[0].size() != _centers[0].size()){
@@ -71,7 +70,7 @@ namespace tarsier {
     }*/
 
     virtual void operator()(Event ev){
-      /// Clustering
+      /// Cluster
       double minimum;
       int64_t out_p;
       _sumOfDistances = 0.;
@@ -87,7 +86,7 @@ namespace tarsier {
         for(auto&& it: curCenter){
           it/=_sumOfCenters[i];
         }
-        _distances[i] = _iiwkClusteringMetric(curCenter.begin(),
+        _distances[i] = _iiwkClusterMetric(curCenter.begin(),
                                               curCenter.end(),
                                               context.begin()
                                               );
@@ -133,7 +132,7 @@ namespace tarsier {
       }
 
       /// Send
-      _handlerIiwkClustering(_iiwkClusteringEventFromEvent(ev, out_p));
+      _handlerIiwkCluster(_iiwkClusterEventFromEvent(ev, out_p));
     }
 
   protected:
@@ -141,9 +140,9 @@ namespace tarsier {
     double _ksi2;
     double _npow;
     double _sumOfDistances;
-    IiwkClusteringMetric _iiwkClusteringMetric;
-    IiwkClusteringEventFromEvent _iiwkClusteringEventFromEvent;
-    HandlerIiwkClustering _handlerIiwkClustering;
+    IiwkClusterMetric _iiwkClusterMetric;
+    IiwkClusterEventFromEvent _iiwkClusterEventFromEvent;
+    HandlerIiwkCluster _handlerIiwkCluster;
 
     std::array<double, nCenters> _distances;
     std::array<std::array<double, neighborhood>, nCenters> _centers;
@@ -151,29 +150,29 @@ namespace tarsier {
   };
 
   //------------------------------------------------------------------------------------------\\
-  /// StandardClustering
+  /// StdCluster
 
   template<
     uint64_t nCenters,
     std::size_t neighborhood,
     typename Event, // require at least a field .context
-    typename StandardClusteringEvent,
-    typename StandardClusteringMetric, // double f(std::vector<double> iterator center begin,std::vector<double> iterator center end,std::vector<double> iterator context begin)
-    typename StandardClusteringEventFromEvent, // IiwkClusteringEvent f(Event,out_polarity)
-    typename HandlerStandardClustering // void f(IiwkClusteringEvent)
+    typename StdClusterEvent,
+    typename StdClusterMetric, // double f(std::array<double,neighborhood> iterator center begin,std::array<double,neighborhood> iterator center end,std::array<double,neighborhood> iterator context begin)
+    typename StdClusterEventFromEvent, // IiwkClusterEvent f(Event,out_polarity)
+    typename HandlerStdCluster // void f(IiwkClusterEvent)
     >
-  class StandardClustering{
+  class StdCluster{
   public:
-    StandardClustering(double baseLearningRate,
+    StdCluster(double baseLearningRate,
                        double baseLearningActivity,
-                       StandardClusteringMetric standardClusteringMetric,
-                       StandardClusteringEventFromEvent standardClusteringEventFromEvent,
-                       HandlerStandardClustering handlerStandardClustering):
+                       StdClusterMetric stdClusterMetric,
+                       StdClusterEventFromEvent stdClusterEventFromEvent,
+                       HandlerStdCluster handlerStdCluster):
       _baseLearningRate(baseLearningRate),
       _baseLearningActivity(baseLearningActivity),
-      _standardClusteringMetric(std::forward<StandardClusteringMetric>(standardClusteringMetric)),
-      _standardClusteringEventFromEvent(std::forward<StandardClusteringEventFromEvent>(standardClusteringEventFromEvent)),
-      _handlerStandardClustering(std::forward<HandlerStandardClustering>(handlerStandardClustering)),
+      _stdClusterMetric(std::forward<StdClusterMetric>(stdClusterMetric)),
+      _stdClusterEventFromEvent(std::forward<StdClusterEventFromEvent>(stdClusterEventFromEvent)),
+      _handlerStdCluster(std::forward<HandlerStdCluster>(handlerStdCluster)),
       _first(0)
     {
       for(auto&& it: _distances){
@@ -192,9 +191,9 @@ namespace tarsier {
       }
     }
 
-    virtual ~StandardClustering() {}
+    virtual ~StdCluster() {}
 
-    /*virtual void setCenters(std::vector<std::vector<double> > newCenters){
+    /*virtual void setCenters(std::vector<std::array<double,neighborhood> > newCenters){
       if(newCenters.size() != _centers.size()){
         std::cout << "Error: waiting for centers of size " << _centers.size() << " instead of " << newCenters.size() << std::endl;
       }else if(newCenters[0].size() != _centers[0].size()){
@@ -212,7 +211,7 @@ namespace tarsier {
     }*/
 
     virtual void operator()(Event ev){
-      /// Clustering
+      /// Cluster
       double minimum;
       int64_t out_p;
 
@@ -227,7 +226,7 @@ namespace tarsier {
           for(auto&& it: curCenter){
             it/=_sumOfCenters[i];
           }
-          _distances[i] = _standardClusteringMetric(curCenter.begin(),
+          _distances[i] = _stdClusterMetric(curCenter.begin(),
                                                     curCenter.end(),
                                                     context.begin()
                                                     );
@@ -277,15 +276,15 @@ namespace tarsier {
       }
 
       /// Send
-      _handlerStandardClustering(_standardClusteringEventFromEvent(ev, out_p));
+      _handlerStdCluster(_stdClusterEventFromEvent(ev, out_p));
     }
 
   protected:
     double _baseLearningRate;
     double _baseLearningActivity;
-    StandardClusteringMetric _standardClusteringMetric;
-    StandardClusteringEventFromEvent _standardClusteringEventFromEvent;
-    HandlerStandardClustering _handlerStandardClustering;
+    StdClusterMetric _stdClusterMetric;
+    StdClusterEventFromEvent _stdClusterEventFromEvent;
+    HandlerStdCluster _handlerStdCluster;
 
     std::array<double, nCenters> _distances;
     std::array<std::array<double, neighborhood>, nCenters> _centers;
@@ -295,83 +294,83 @@ namespace tarsier {
   };
 
   //------------------------------------------------------------------------------------------\\
-  /// make_iiwkClustering
+  /// make_iiwkCluster
 
   template<
     uint64_t nCenters,
     std::size_t neighborhood,
     typename Event,
-    typename IiwkClusteringEvent,
-    typename IiwkClusteringMetric,
-    typename IiwkClusteringEventFromEvent,
-    typename HandlerIiwkClustering
+    typename IiwkClusterEvent,
+    typename IiwkClusterMetric,
+    typename IiwkClusterEventFromEvent,
+    typename HandlerIiwkCluster
     >
-  IiwkClustering<nCenters,
+  IiwkCluster<nCenters,
                  neighborhood,
                  Event,
-                 IiwkClusteringEvent,
-                 IiwkClusteringMetric,
-                 IiwkClusteringEventFromEvent,
-                 HandlerIiwkClustering>
-  make_iiwkClustering(double ksi1,
+                 IiwkClusterEvent,
+                 IiwkClusterMetric,
+                 IiwkClusterEventFromEvent,
+                 HandlerIiwkCluster>
+  make_iiwkCluster(double ksi1,
                       double ksi2,
                       double npow,
-                      IiwkClusteringMetric iiwkClusteringMetric,
-                      IiwkClusteringEventFromEvent iiwkClusteringEventFromEvent,
-                      HandlerIiwkClustering handlerIiwkClustering)
+                      IiwkClusterMetric iiwkClusterMetric,
+                      IiwkClusterEventFromEvent iiwkClusterEventFromEvent,
+                      HandlerIiwkCluster handlerIiwkCluster)
   {
-    return IiwkClustering<nCenters,
+    return IiwkCluster<nCenters,
                           neighborhood,
                           Event,
-                          IiwkClusteringEvent,
-                          IiwkClusteringMetric,
-                          IiwkClusteringEventFromEvent,
-                          HandlerIiwkClustering>
+                          IiwkClusterEvent,
+                          IiwkClusterMetric,
+                          IiwkClusterEventFromEvent,
+                          HandlerIiwkCluster>
       (ksi1,
        ksi2,
        npow,
-       std::forward<IiwkClusteringMetric>(iiwkClusteringMetric),
-       std::forward<IiwkClusteringEventFromEvent>(iiwkClusteringEventFromEvent),
-       std::forward<HandlerIiwkClustering>(handlerIiwkClustering)
+       std::forward<IiwkClusterMetric>(iiwkClusterMetric),
+       std::forward<IiwkClusterEventFromEvent>(iiwkClusterEventFromEvent),
+       std::forward<HandlerIiwkCluster>(handlerIiwkCluster)
        );
   }
   //------------------------------------------------------------------------------------------\\
-  /// make_standardClustering
+  /// make_stdCluster
 
   template<
     uint64_t nCenters,
     std::size_t neighborhood,
     typename Event, // require at least a field .context
-    typename StandardClusteringEvent,
-    typename StandardClusteringMetric, // double f(std::vector<double> iterator center begin,std::vector<double> iterator center end,std::vector<double> iterator context begin)
-    typename StandardClusteringEventFromEvent, // IiwkClusteringEvent f(Event,out_polarity)
-    typename HandlerStandardClustering // void f(IiwkClusteringEvent)
+    typename StdClusterEvent,
+    typename StdClusterMetric, // double f(std::array<double,neighborhood> iterator center begin,std::array<double,neighborhood> iterator center end,std::array<double,neighborhood> iterator context begin)
+    typename StdClusterEventFromEvent, // IiwkClusterEvent f(Event,out_polarity)
+    typename HandlerStdCluster // void f(IiwkClusterEvent)
     >
-  StandardClustering<nCenters,
+  StdCluster<nCenters,
                      neighborhood,
                      Event,
-                     StandardClusteringEvent,
-                     StandardClusteringMetric,
-                     StandardClusteringEventFromEvent,
-                     HandlerStandardClustering>
-  make_standardClustering(double baseLearningRate,
+                     StdClusterEvent,
+                     StdClusterMetric,
+                     StdClusterEventFromEvent,
+                     HandlerStdCluster>
+  make_stdCluster(double baseLearningRate,
                           double baseLearningActivity,
-                          StandardClusteringMetric standardClusteringMetric,
-                          StandardClusteringEventFromEvent standardClusteringEventFromEvent,
-                          HandlerStandardClustering handlerStandardClustering)
+                          StdClusterMetric stdClusterMetric,
+                          StdClusterEventFromEvent stdClusterEventFromEvent,
+                          HandlerStdCluster handlerStdCluster)
   {
-    return StandardClustering<nCenters,
+    return StdCluster<nCenters,
                               neighborhood,
                               Event,
-                              StandardClusteringEvent,
-                              StandardClusteringMetric,
-                              StandardClusteringEventFromEvent,
-                              HandlerStandardClustering>
+                              StdClusterEvent,
+                              StdClusterMetric,
+                              StdClusterEventFromEvent,
+                              HandlerStdCluster>
       (baseLearningRate,
        baseLearningActivity,
-       std::forward<StandardClusteringMetric>(standardClusteringMetric),
-       std::forward<StandardClusteringEventFromEvent>(standardClusteringEventFromEvent),
-       std::forward<HandlerStandardClustering>(handlerStandardClustering)
+       std::forward<StdClusterMetric>(stdClusterMetric),
+       std::forward<StdClusterEventFromEvent>(stdClusterEventFromEvent),
+       std::forward<HandlerStdCluster>(handlerStdCluster)
        );
   }
 

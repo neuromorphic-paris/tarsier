@@ -19,7 +19,7 @@ namespace tarsier {
     typename Event,
     typename TimeSurfaceEvent,
     typename Kernel, // double f(Event ref, Event neighbor)
-    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
+    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::array<double,contextSize>)
     typename HandlerTimeSurfaceGenerator //  void f(TimeSurfaceEvent)
     >
   class TimeSurfaceGenerator{
@@ -61,7 +61,7 @@ namespace tarsier {
     typename Event, // require at least a field .t .x .p
     typename TimeSurfaceEvent,
     typename Kernel, // double f(Event ref, Event neighbor)
-    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
+    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::array<double,contextSize>)
     typename HandlerTimeSurfaceGenerator //  void f(TimeSurfaceEvent)
     >
   class TimeSurfaceGenerator1D: public TimeSurfaceGenerator<X*nP,
@@ -120,7 +120,7 @@ namespace tarsier {
     typename Event, // require at least a field .t .x .y .p
     typename TimeSurfaceEvent,
     typename Kernel, // double f(Event ref, Event neighbor)
-    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
+    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::array<double,contextSize>)
     typename HandlerTimeSurfaceGenerator //  void f(TimeSurfaceEvent)
     >
   class TimeSurfaceGenerator2D: public TimeSurfaceGenerator<X*Y*nP,
@@ -184,7 +184,7 @@ namespace tarsier {
     typename Event, //Requires at least a field .t, .x, .p
     typename TimeSurfaceEvent,
     typename Kernel, // double f(Event ref, Event neighbor)
-    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
+    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::array<double,contextSize>)
     typename HandlerTimeSurfaceGenerator // void f(TimeSurfaceEvent)
     >
   TimeSurfaceGenerator1D<X,
@@ -225,7 +225,7 @@ namespace tarsier {
     typename Event, //Requires at least a field .t, .x, .y, .p
     typename TimeSurfaceEvent,
     typename Kernel, // double f(Event ref, Event neighbor)
-    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::vector<double>)
+    typename TimeSurfaceEventFromEvent, // TimeSurfaceEvent f(Event, std::array<double,contextSize>)
     typename HandlerTimeSurfaceGenerator // void f(TimeSurfaceEvent)
     >
   TimeSurfaceGenerator2D<X,
