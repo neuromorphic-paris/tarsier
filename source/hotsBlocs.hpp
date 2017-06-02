@@ -145,7 +145,7 @@ namespace tarsier {
           coeff = (coeff > 1) ? 1: coeff;
           double curCoeff;
 
-          for(int64_t i = 0; i < nCenters; i++){
+          for(uint64_t i = 0; i < nCenters; i++){
             if(i != out_p){
               curCoeff = _ksi2*std::pow(minimum,_npow)/_distances[i];
             }else{
@@ -186,8 +186,8 @@ namespace tarsier {
     IiwkClusterEventFromEvent _iiwkClusterEventFromEvent;
     HandlerIiwkCluster _handlerIiwkCluster;
 
-    std::array<double, nCenters> _distances;
     std::array<std::array<double, neighborhood>, nCenters> _centers;
+    std::array<double, nCenters> _distances;
     std::array<double, nCenters> _sumOfCenters;
   };
 
@@ -368,10 +368,10 @@ namespace tarsier {
     StdClusterEventFromEvent _stdClusterEventFromEvent;
     HandlerStdCluster _handlerStdCluster;
 
-    std::array<double, nCenters> _distances;
     std::array<std::array<double, neighborhood>, nCenters> _centers;
-    std::array<int64_t, nCenters> _activity;
+    std::array<double, nCenters> _distances;
     std::array<double, nCenters> _sumOfCenters;
+    std::array<int64_t, nCenters> _activity;
     int _first;
   };
 

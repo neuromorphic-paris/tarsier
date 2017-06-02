@@ -93,7 +93,7 @@ TEST_CASE("Compute Hots from the given events", "[Hots]") {
   standardLayer(TsEvent{3,std::array<double,TSSIZE>{0.6, 0.6, 0.7, 0.7, 0.7, 0.7, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1, 0.9, 0.8, 0.8, 0.7}});
   standardLayer(TsEvent{3,std::array<double,TSSIZE>{0.6, 0.7, 0.7, 0.7, 0.7, 0.8, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.9, 0.9, 0.9, 0.8, 0.8}});
 
-  auto start = std::chrono::steady_clock::now();
+  // auto start = std::chrono::steady_clock::now();
   for(auto i = 0; i < 1000000; i++){
     if(i > 1000000-20){
       go = true;
@@ -118,7 +118,7 @@ TEST_CASE("Compute Hots from the given events", "[Hots]") {
       break;
     }
   }
-  auto duration = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::steady_clock::now() - start);
+  // auto duration = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::steady_clock::now() - start);
 
-  std::cout << "Elasped time: " << duration.count() << "ms" << std::endl;
+  // std::cout << "Elasped time: " << duration.count() << "ms" << std::endl;
 }
