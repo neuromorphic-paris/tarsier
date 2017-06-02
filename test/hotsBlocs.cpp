@@ -83,9 +83,9 @@ TEST_CASE("Compute Hots from the given events", "[Hots]") {
   auto handlerHots = [](TsEvent ev){
   };
 
-  auto iiwkLayer = tarsier::make_iiwkCluster<NCENTERS,TSSIZE,TsEvent,TsEvent>
+  auto iiwkLayer = tarsier::make_iiwkCluster<NCENTERS,TSSIZE,true,true,TsEvent,TsEvent>
     (2e-4, 2e-4,1,battacharya,tsEventFromTsEventIiwk,handlerHots);
-  auto standardLayer = tarsier::make_stdCluster<NCENTERS,TSSIZE,TsEvent,TsEvent>
+  auto standardLayer = tarsier::make_stdCluster<NCENTERS,TSSIZE,true,true,TsEvent,TsEvent>
     (0.005, 20000.0,battacharya,tsEventFromTsEventStandard,handlerHots);
 
   standardLayer(TsEvent{1,std::array<double,TSSIZE>{0.7, 0.8, 0.8, 0.9, 0.9, 1.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.7, 0.7, 0.6, 0.6, 0.6, 0.5, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000}});
