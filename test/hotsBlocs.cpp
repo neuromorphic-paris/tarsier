@@ -121,4 +121,52 @@ TEST_CASE("Compute Hots from the given events", "[Hots]") {
   // auto duration = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::steady_clock::now() - start);
 
   // std::cout << "Elasped time: " << duration.count() << "ms" << std::endl;
+  /*
+  go = false;
+  auto Nevents = 1000000;
+  auto iiwkLayerL = tarsier::make_iiwkCluster<NCENTERS,TSSIZE,true,false,TsEvent,TsEvent>
+    (2e-4, 2e-4,1,battacharya,tsEventFromTsEventIiwk,handlerHots);
+  auto standardLayerL = tarsier::make_stdCluster<NCENTERS,TSSIZE,true,false,TsEvent,TsEvent>
+    (0.005, 20000.0,battacharya,tsEventFromTsEventStandard,handlerHots);
+  auto iiwkLayerNL = tarsier::make_iiwkCluster<NCENTERS,TSSIZE,true,false,TsEvent,TsEvent>
+    (2e-4, 2e-4,1,battacharya,tsEventFromTsEventIiwk,handlerHots);
+  auto standardLayerNL = tarsier::make_stdCluster<NCENTERS,TSSIZE,true,false,TsEvent,TsEvent>
+    (0.005, 20000.0,battacharya,tsEventFromTsEventStandard,handlerHots);
+
+  standardLayerNL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  standardLayerNL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  standardLayerNL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  standardLayerNL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  standardLayerL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  standardLayerL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  standardLayerL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  standardLayerL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+
+  auto start = std::chrono::steady_clock::now();
+  for(auto i = 0; i  < Nevents; i++){
+    standardLayerL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  }
+  auto duration = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::steady_clock::now() - start);
+  std::cout << "STD learning\t-> Speed: " << static_cast<double>(Nevents)/(static_cast<double>(duration.count())/1000.) << " evs/secs" << std::endl;
+
+  start = std::chrono::steady_clock::now();
+  for(auto i = 0; i  < Nevents; i++){
+    standardLayerNL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  }
+  duration = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::steady_clock::now() - start);
+  std::cout << "STD NL\t\t-> Speed: " << static_cast<double>(Nevents)/(static_cast<double>(duration.count())/1000.) << " evs/secs" << std::endl;
+
+  start = std::chrono::steady_clock::now();
+  for(auto i = 0; i  < Nevents; i++){
+    iiwkLayerL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  }
+  duration = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::steady_clock::now() - start);
+  std::cout << "IIWK learning\t-> Speed: " << static_cast<double>(Nevents)/(static_cast<double>(duration.count())/1000.) << " evs/secs" << std::endl;
+
+  start = std::chrono::steady_clock::now();
+  for(auto i = 0; i  < Nevents; i++){
+    iiwkLayerNL(TsEvent{3,std::array<double,TSSIZE>{0.576950, 0.606531, 0.637628, 0.670320, 0.704688, 0.740818, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.951229, 0.904837, 0.860708, 0.818731, 0.778801}});
+  }
+  duration = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::steady_clock::now() - start);
+  std::cout << "IIWK NL\t\t-> Speed: " << static_cast<double>(Nevents)/(static_cast<double>(duration.count())/1000.) << " evs/secs" << std::endl;*/
 }

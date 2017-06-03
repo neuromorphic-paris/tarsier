@@ -84,6 +84,9 @@ namespace tarsier {
     }
 
     virtual ~IiwkCluster(){}
+    virtual std::array<std::array<double, neighborhood>, nCenters> getCenters() const{
+      return _centers;
+    }
 
     /*virtual void setCenters(std::vector<std::array<double,neighborhood> > newCenters){
       if(newCenters.size() != _centers.size()){
@@ -265,6 +268,9 @@ namespace tarsier {
     }
 
     virtual ~StdCluster() {}
+    virtual std::array<std::array<double, neighborhood>, nCenters> getCenters() const{
+      return _centers;
+    }
 
     /*virtual void setCenters(std::vector<std::array<double,neighborhood> > newCenters){
       if(newCenters.size() != _centers.size()){
