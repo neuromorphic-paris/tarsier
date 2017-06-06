@@ -1,6 +1,7 @@
 #include "../source/timeSurfaceGenerator.hpp"
 
 #include "catch.hpp"
+#include <chrono>
 
 #define RADIUS_1D 5
 #define RADIUS_2D 2
@@ -126,4 +127,21 @@ TEST_CASE("Compute 1D timeSurfaces from the given events", "[TimeSurface]") {
   go = true;
   myTs2d(Event2d{110,14,13,1});
   go = false;
+  /*
+  auto Nevents = 1000000;
+  auto start = std::chrono::steady_clock::now();
+  for(auto i = 0; i < Nevents; i ++){
+    myTs1d(Event1d{0, 10, 1});
+  }
+  auto duration = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::steady_clock::now() - start);
+
+  std::cout << "1D -> Speed: " << static_cast<double>(Nevents)/(static_cast<double>(duration.count())/1000.) << " evs/secs" << std::endl;
+
+  start = std::chrono::steady_clock::now();
+  for(auto i = 0; i < Nevents; i ++){
+    myTs2d(Event2d{100,14,13,0});
+  }
+  duration = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::steady_clock::now() - start);
+
+  std::cout << "2D -> Speed: " << static_cast<double>(Nevents)/(static_cast<double>(duration.count())/1000.) << " evs/secs" << std::endl;*/
 }
