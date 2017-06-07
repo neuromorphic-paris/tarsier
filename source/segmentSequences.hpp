@@ -14,6 +14,7 @@ namespace tarsier{
                      HandlerSegmentSequences handlerSegmentSequences):
       _handlerSequences(std::forward<HandlerSequences>(handlerSequences)),
       _handlerSegmentSequences(std::forward<HandlerSegmentSequences>(handlerSegmentSequences)),
+      _curentSequence(0),
       _stackEvent(false)
     {}
 
@@ -36,8 +37,8 @@ namespace tarsier{
   protected:
     HandlerSequences _handlerSequences;
     HandlerSegmentSequences _handlerSegmentSequences;
-    std::vector<Event> _curentSequence;
 
+    std::vector<Event> _curentSequence;
     bool _stackEvent;
   };
 
