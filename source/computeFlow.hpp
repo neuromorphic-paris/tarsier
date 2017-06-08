@@ -123,7 +123,7 @@ namespace tarsier {
         typename HandleFlowEvent
     >
     ComputeFlow<Event, FlowEvent, width, height, window, numberOfMostRecentEvents, lifespan, FlowEventFromEvent, HandleFlowEvent> 
-    make_computeFlow(lowEventFromEvent flowEventFromEvent, HandleFlowEvent handleFlowEvent) {
+    make_computeFlow(FlowEventFromEvent flowEventFromEvent, HandleFlowEvent handleFlowEvent) {
         return ComputeFlow<Event, FlowEvent, width, height, window, numberOfMostRecentEvents, lifespan, FlowEventFromEvent, HandleFlowEvent>(
             std::forward<FlowEventFromEvent>(flowEventFromEvent),
             std::forward<HandleFlowEvent>(handleFlowEvent)
