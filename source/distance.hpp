@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 /// tarsier is a collection of event handler
 namespace tarsier{
@@ -26,11 +27,12 @@ namespace tarsier{
       std::vector<std::vector<double> > d(inputString.size()+1, std::vector<double>(expectedString.size()+1,0));
       double substituteElem = 0., addElem = 0., deleteElem = 0.;
 
-      for(std::size_t i = 0; i <= inputString.size(); i++){
-        d[i][0] = i;
+      d[0][0] = 0;
+      for(std::size_t i = 1; i <= inputString.size(); i++){
+        d[i][0] = d[i-1][0]+_deleteCost;
       }
       for(std::size_t i = 1; i <= expectedString.size(); i++){
-        d[0][i] = i;
+        d[0][i] = d[0][i-1]+_addCost;
       }
       for(std::size_t i = 1; i <= inputString.size(); i++){
         for(std::size_t j = 1; j <= expectedString.size(); j++){
@@ -72,14 +74,14 @@ namespace tarsier{
 
       d[0][0] = ((inputString[0] == expectedString[0]) ? 0 : 1);
       for(std::size_t i = 1; i < inputString.size(); i++){
-        d[i][0] = d[i-1][0] + ((inputString[i] == expectedString[0]) ? 0 : 1);
+        d[i][0] = d[i-1][0] + ((inputString[i] == expectedString[0]) ? 0 : 1)+_deleteCost;
       }
       for(std::size_t i = 1; i < expectedString.size(); i++){
-        d[0][i] = d[0][i-1] + ((inputString[0] == expectedString[i]) ? 0 : 1);
+        d[0][i] = d[0][i-1] + ((inputString[0] == expectedString[i]) ? 0 : 1)+_addCost;
       }
       for(std::size_t i = 1; i < inputString.size(); i++){
         for(std::size_t j = 1; j < expectedString.size(); j++){
-          substituteElem = d[i-1][j-1]+_substituteCost;
+          substituteElem = d[i-1][j-1]+((inputString[i] == expectedString[j]) ? 0 : _substituteCost);
           addElem = d[i][j-1]+_addCost;
           deleteElem = d[i-1][j]+_deleteCost;
           d[i][j]= ((inputString[i] == expectedString[j]) ? 0 : 1) + ((addElem < deleteElem) ? ((addElem < substituteElem) ? addElem : substituteElem) : ((deleteElem < substituteElem) ? deleteElem : substituteElem));
@@ -151,6 +153,9 @@ namespace tarsier{
                                            return sqrt(a*b);
                                          })
                       );
+      /*if(d < 0){
+        throw("Vectors are not normalized, negative distance");
+      }*/
       return (std::isinf(d)) ? _limitOfInfinite : (d < _limitOfZeros) ? 0. : d;
     }
 
