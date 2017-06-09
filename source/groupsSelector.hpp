@@ -39,14 +39,61 @@ namespace tarsier{
 
       for(auto&& itThd: _thresholds){
         _groups = this->reduce(matrix, itThd);
+        std::vector<double> interClass;
+        std::vector<double> idxCenters;
+        auto groupsCpt = 0;
+        std::cout << "--------------------------------------------------\n";
+        std::cout << "THD: " << itThd << std::endl;
+        std::cout << "--------------------------------------------------\n";
         for(auto&& it: _groups){
+          auto errMean = 0.;
+          auto minimum = -1.;
+          auto cpt = 0;
+          idxCenters.push_back(0);
+          for(auto&& it2: it){
+            auto tempErr = 0.;
+            for(auto&& it3: it){
+              tempErr+=matrix[it2][it3];
+            }
+            if(minimum < 0){
+              minimum = tempErr;
+              idxCenters.back() = it2;
+            }else if(minimum > tempErr){
+              minimum = tempErr;
+              idxCenters.back() = it2;
+            }
+            errMean+= tempErr;
+            cpt++;
+          }
+          // idxCenters.push_back(tempErr);
+          errMean/=(it.size()*it.size());
+          std::cout << "(intra " << groupsCpt++ << ": " << errMean << ")\t";
           for(auto&& it2: it){
             std::cout << it2 << "\t";
           }
           std::cout << std::endl;
         }
         std::cout << std::endl;
+        auto cpt = 0;
+        std::cout << "\t";
+        for(auto&& it: idxCenters){
+          std::cout << cpt++ << "\t";
+        }
         std::cout << std::endl;
+        cpt = 0;
+        for(auto&& it: idxCenters){
+          std::cout << cpt++ << ")\t";
+          for(auto&& it2: idxCenters){
+            std::cout << matrix[it][it2] << "\t";
+          }
+          std::cout << std::endl;
+        }
+        std::cout << std::endl;
+        std::cout << std::endl;
+        if(_groups.size() <= 5){//matrix.size()/10){
+          std::cout << "Ok it is fine now!" << std::endl;
+          break;
+        }
       }
     }
 
