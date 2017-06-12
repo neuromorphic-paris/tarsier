@@ -14,21 +14,19 @@ namespace tarsier{
                      HandlerSegmentSequences handlerSegmentSequences):
       _handlerSequences(std::forward<HandlerSequences>(handlerSequences)),
       _handlerSegmentSequences(std::forward<HandlerSegmentSequences>(handlerSegmentSequences)),
-      _curentSequence(0),
-      _stackEvent(false)
+      _curentSequence(0)
     {}
 
     virtual ~SegmentSequences(){}
 
     virtual void operator()(Event ev){
       if(ev.sequenceTrigger == 1){
-        _curentSequence.clear();
-      }else if(ev.sequenceTrigger == -1){
-        _handlerSequences(_curentSequence);
-      }
-
-      if(_stackEvent){
         _curentSequence.push_back(ev);
+      }else if(ev.sequenceTrigger == -1){
+        if(!_curentSequence.empty()){
+          _handlerSequences(_curentSequence);
+          _curentSequence.clear();
+        }
       }
 
       _handlerSegmentSequences(ev);
@@ -39,7 +37,6 @@ namespace tarsier{
     HandlerSegmentSequences _handlerSegmentSequences;
 
     std::vector<Event> _curentSequence;
-    bool _stackEvent;
   };
 
   /// make_segmentSequences
