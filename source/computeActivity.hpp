@@ -31,7 +31,7 @@ public:
   virtual void operator()(Event event) {
     _activity *=
         exp(-static_cast<double>(event.timestamp - _lastTimeStamp) / _lifespan);
-    _activity++;
+    _activity += 1;
     _lastTimeStamp = event.timestamp;
     _handleActivityEvent(_activityEventFromEvent(event, _activity));
   }
