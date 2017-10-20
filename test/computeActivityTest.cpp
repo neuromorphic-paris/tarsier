@@ -35,7 +35,7 @@ TEST_CASE("Compute the event activity in a scene", "[ComputeActivity]") {
   computeActivity(Event{40000});
   REQUIRE(std::abs(expectedActivities[1] - 1.36787944117) < 0.001);
 
-  // Activity = 1.87109416558
+  // Activity = 1.50321472441
   computeActivity(Event{70000});
   REQUIRE(std::abs(expectedActivities[2] - 1.50321472441) < 0.001);
 
