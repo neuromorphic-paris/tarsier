@@ -2,8 +2,6 @@
 
 #include "catch.hpp"
 
-#include <iostream>
-
 struct Event {
   uint64_t timestamp;
 } __attribute__((packed));
@@ -15,7 +13,7 @@ struct ActivityEvent {
 
 const uint64_t lifespan = 30000;
 
-int counter = 0;
+std::vector<double> expectedActivities;
 
 TEST_CASE("Compute the event activity in a scene", "[ComputeActivity]") {
   auto activityEventGenerated = false;
@@ -26,20 +24,20 @@ TEST_CASE("Compute the event activity in a scene", "[ComputeActivity]") {
           },
           [&activityEventGenerated](ActivityEvent activityEvent) -> void {
             activityEventGenerated = true;
-            // REQUIRE(std::abs(activityEvent.activity - 11.87109416558) <
-            // 0.01);
-
-            if (counter == 2) {
-              REQUIRE(std::abs(activityEvent.activity - 1.87109416558) < 0.01);
-            }
-            counter++;
+            expectedActivities.push_back(activityEvent.activity);
           });
 
   // Activity = 1
   computeActivity(Event{10000});
+  REQUIRE(std::abs(expectedActivities[0] - 1.) < 0.001);
+
   // Activity = 1.36787944117
   computeActivity(Event{40000});
+  REQUIRE(std::abs(expectedActivities[1] - 1.36787944117) < 0.001);
+
   // Activity = 1.87109416558
   computeActivity(Event{70000});
+  REQUIRE(std::abs(expectedActivities[2] - 1.50321472441) < 0.001);
+
   REQUIRE(activityEventGenerated);
 }
