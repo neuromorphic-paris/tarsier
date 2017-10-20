@@ -1,11 +1,8 @@
 #pragma once
 
 #include <algorithm>
-#include <array>
 #include <cmath>
 #include <cstdint>
-#include <limits>
-#include <utility>
 
 namespace tarsier {
 
@@ -29,8 +26,10 @@ public:
   virtual ~ComputeActivity() {}
 
   virtual void operator()(Event event) {
+    // exponential decay depending on the difference to the last timestamp
     _activity *=
         exp(-static_cast<double>(event.timestamp - _lastTimeStamp) / _lifespan);
+    // every event generates an activity of 1
     _activity += 1;
     _lastTimeStamp = event.timestamp;
     _handleActivityEvent(_activityEventFromEvent(event, _activity));
