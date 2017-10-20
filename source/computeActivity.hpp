@@ -1,3 +1,12 @@
+#pragma once
+
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstdint>
+#include <limits>
+#include <utility>
+
 namespace tarsier {
 
 /// ComputeActivity evaluates the activity within a temporal neighbourhood
@@ -11,7 +20,7 @@ public:
             std::forward<ActivityEventFromEvent>(activityEventFromEvent)),
         _handleActivityEvent(
             std::forward<HandleActivityEvent>(handleActivityEvent)),
-        _lifespan(lifespan), _activity(1), _lastTimeStamp(0) {}
+        _lifespan(lifespan), _activity(0), _lastTimeStamp(0) {}
 
   ComputeActivity(const ComputeActivity &) = delete;
   ComputeActivity(ComputeActivity &&) = default;
@@ -20,21 +29,20 @@ public:
   virtual ~ComputeActivity() {}
 
   virtual void operator()(Event event) {
-    _activity =
-        _activity *
-            exp(-static_cast<double>(atisEvent.timestamp - _lastTimeStamp) /
-                _lifespan) +
-        1;
+    _activity *=
+        exp(-static_cast<double>(event.timestamp - _lastTimeStamp) / _lifespan);
+    _activity++;
     _lastTimeStamp = event.timestamp;
     _handleActivityEvent(_activityEventFromEvent(event, _activity));
   }
 
 protected:
-  const double _lifespan;
+  ActivityEventFromEvent _activityEventFromEvent;
+  const uint64_t _lifespan;
   double _activity;
   uint64_t _lastTimeStamp;
-
-}
+  HandleActivityEvent _handleActivityEvent;
+};
 
 template <typename Event, typename ActivityEvent, uint64_t lifespan,
           typename ActivityEventFromEvent, typename HandleActivityEvent>
@@ -45,6 +53,6 @@ make_computeActivity(ActivityEventFromEvent activityEventFromEvent,
   return ComputeActivity<Event, ActivityEvent, lifespan, ActivityEventFromEvent,
                          HandleActivityEvent>(
       std::forward<ActivityEventFromEvent>(activityEventFromEvent),
-      std::forward < HandleActivityEvent(handleActivityEvent));
+      std::forward<HandleActivityEvent>(handleActivityEvent));
 }
 }
