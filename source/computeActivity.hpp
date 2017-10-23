@@ -17,7 +17,8 @@ public:
             std::forward<ActivityEventFromEvent>(activityEventFromEvent)),
         _handleActivityEvent(
             std::forward<HandleActivityEvent>(handleActivityEvent)),
-        _lifespan(lifespan), _activity(0), _lastTimeStamp(0) {}
+        _lifespan(lifespan), _activity(0), _lastTimeStamp(0), _activityON(0),
+        _lastTimeStampON(0), _activityOFF(0), _lastTimeStampOFF(0) {}
 
   ComputeActivity(const ComputeActivity &) = delete;
   ComputeActivity(ComputeActivity &&) = default;
@@ -32,7 +33,22 @@ public:
     // every event generates an activity of 1
     _activity += 1;
     _lastTimeStamp = event.timestamp;
-    _handleActivityEvent(_activityEventFromEvent(event, _activity));
+
+    if (event.polarity) {
+      _activityON *= exp(
+          -static_cast<double>(event.timestamp - _lastTimeStampON) / _lifespan);
+      _activityON += 1;
+      _lastTimeStampON = event.timestamp;
+    }
+    if (!event.polarity) {
+      _activityOFF *=
+          exp(-static_cast<double>(event.timestamp - _lastTimeStampOFF) /
+              _lifespan);
+      _activityOFF += 1;
+      _lastTimeStampOFF = event.timestamp;
+    }
+    _handleActivityEvent(
+        _activityEventFromEvent(event, _activity, _activityON, _activityOFF));
   }
 
 protected:
@@ -40,6 +56,10 @@ protected:
   const uint64_t _lifespan;
   double _activity;
   uint64_t _lastTimeStamp;
+  double _activityON;
+  uint64_t _lastTimeStampON;
+  double _activityOFF;
+  uint64_t _lastTimeStampOFF;
   HandleActivityEvent _handleActivityEvent;
 };
 
