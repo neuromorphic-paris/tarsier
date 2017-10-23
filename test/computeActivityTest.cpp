@@ -35,18 +35,20 @@ TEST_CASE("Compute the event activity in a scene", "[ComputeActivity]") {
           });
 
   // Activity = 1
+  // ON - event
   computeActivity(Event{10000, true});
-  REQUIRE(std::abs(expectedActivitiesON[0] - 1.) < 0.001);
+  REQUIRE(expectedActivitiesON[0] == 1);
   REQUIRE(expectedActivitiesOFF[0] == 0);
 
+  // OFF - event
   computeActivity(Event{15000, false});
-  REQUIRE(std::abs(expectedActivitiesON[1] - 1.) < 0.001);
-  REQUIRE(std::abs(expectedActivitiesOFF[1] - 1.) < 0.001);
+  REQUIRE(expectedActivitiesON[1] == 1);
+  REQUIRE(expectedActivitiesOFF[1] == 1);
 
   // Activity = 1.36787944117
   computeActivity(Event{40000, true});
   REQUIRE(std::abs(expectedActivitiesON[2] - 1.36787944117) < 0.001);
-  REQUIRE(std::abs(expectedActivitiesOFF[2] - 1.) < 0.001);
+  REQUIRE(expectedActivitiesOFF[2] == 1);
 
   computeActivity(Event{45000, false});
   REQUIRE(std::abs(expectedActivitiesON[3] - 1.36787944117) < 0.001);
