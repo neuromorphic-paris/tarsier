@@ -27,7 +27,7 @@ namespace tarsier {
         protected:
         /// trigger calls the n-th event callback.
         template <std::size_t index>
-            typename std::enable_if<index < sizeof...(HandleEventCallbacks), void>::type trigger(Event event) {
+            typename std::enable_if < index<sizeof...(HandleEventCallbacks), void>::type trigger(Event event) {
             std::get<index>(_handle_event_callbacks)(event);
             trigger<index + 1>(std::forward<Event>(event));
         }
@@ -42,7 +42,6 @@ namespace tarsier {
     /// make_replicate creates a replicate from functors.
     template <typename Event, typename... HandleEventCallbacks>
     replicate<Event, HandleEventCallbacks...> make_replicate(HandleEventCallbacks... handle_event_callbacks) {
-        return replicate<Event, HandleEventCallbacks...>(
-            std::forward<HandleEventCallbacks>(handle_event_callbacks)...);
+        return replicate<Event, HandleEventCallbacks...>(std::forward<HandleEventCallbacks>(handle_event_callbacks)...);
     }
 }

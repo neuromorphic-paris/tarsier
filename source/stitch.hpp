@@ -8,11 +8,7 @@
 namespace tarsier {
 
     /// stitch turns a stream of threshold crossings into a stream of time differences.
-    template <
-        typename ThresholdCrossing,
-        typename Event,
-        typename ThresholdCrossingToEvent,
-        typename HandleEvent>
+    template <typename ThresholdCrossing, typename Event, typename ThresholdCrossingToEvent, typename HandleEvent>
     class stitch {
         public:
         stitch(
@@ -59,11 +55,7 @@ namespace tarsier {
     };
 
     /// make_stitch creates a stitch from functors.
-    template <
-        typename ThresholdCrossing,
-        typename Event,
-        typename ThresholdCrossingToEvent,
-        typename HandleEvent>
+    template <typename ThresholdCrossing, typename Event, typename ThresholdCrossingToEvent, typename HandleEvent>
     stitch<ThresholdCrossing, Event, ThresholdCrossingToEvent, HandleEvent> make_stitch(
         uint16_t width,
         uint16_t height,

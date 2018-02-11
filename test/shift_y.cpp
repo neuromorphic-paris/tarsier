@@ -10,4 +10,3 @@ TEST_CASE("Shift the y coordinate", "[shift_y]") {
     shift_y(event{235});
     shift_y(event{135});
 }
-

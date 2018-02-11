@@ -25,8 +25,7 @@ TEST_CASE("Average the events with a Gaussian blob", "[track_blob]") {
         0.0,
         0.999,
         0.999,
-        [](event event, double x, double y, double squared_sigma_x, double sigma_xy, double squared_sigma_y)
-            -> blob {
+        [](event event, double x, double y, double squared_sigma_x, double sigma_xy, double squared_sigma_y) -> blob {
             return {x, y, squared_sigma_x, sigma_xy, squared_sigma_y};
         },
         [&](blob blob) -> void {
