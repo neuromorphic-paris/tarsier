@@ -1,54 +1,47 @@
 #pragma once
 
 #include <cstdint>
-#include <utility>
 #include <tuple>
-#include <type_traits>
+#include <utility>
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
 
-    /// Replicate triggers several handlers for each event.
-    template <typename Event, typename ...HandleEventCallbacks>
-    class Replicate {
-        static_assert(std::is_copy_constructible<Event>::value, "Event must be copy-constructible");
+    /// replicate triggers several handlers for each event.
+    template <typename Event, typename... HandleEventCallbacks>
+    class replicate {
         public:
-            Replicate(HandleEventCallbacks... handleEventCallbacks) :
-                _handleEventCallbacks(std::forward<HandleEventCallbacks>(handleEventCallbacks)...)
-            {
-            }
-            Replicate(const Replicate&) = delete;
-            Replicate(Replicate&&) = default;
-            Replicate& operator=(const Replicate&) = delete;
-            Replicate& operator=(Replicate&&) = default;
-            virtual ~Replicate() {}
+        replicate(HandleEventCallbacks... handle_event_callbacks) :
+            _handle_event_callbacks(std::forward<HandleEventCallbacks>(handle_event_callbacks)...) {}
+        replicate(const replicate&) = delete;
+        replicate(replicate&&) = default;
+        replicate& operator=(const replicate&) = delete;
+        replicate& operator=(replicate&&) = default;
+        virtual ~replicate() {}
 
-            /// operator() handles an event.
-            virtual void operator()(Event event) {
-                Replicate<Event, HandleEventCallbacks...>::trigger<0>(std::forward<Event>(event));
-            }
+        /// operator() handles an event.
+        virtual void operator()(Event event) {
+            replicate<Event, HandleEventCallbacks...>::trigger<0>(std::forward<Event>(event));
+        }
 
         protected:
+        /// trigger calls the n-th event callback.
+        template <std::size_t index>
+            typename std::enable_if < index<sizeof...(HandleEventCallbacks), void>::type trigger(Event event) {
+            std::get<index>(_handle_event_callbacks)(event);
+            trigger<index + 1>(std::forward<Event>(event));
+        }
 
-            /// trigger calls the n-th event callback.
-            template<std::size_t Index>
-            typename std::enable_if<Index < sizeof...(HandleEventCallbacks), void>::type
-            trigger(Event event) {
-                std::get<Index>(_handleEventCallbacks)(event);
-                trigger<Index + 1>(std::forward<Event>(event));
-            }
+        /// trigger is a termination for the template loop.
+        template <std::size_t index>
+        typename std::enable_if<index == sizeof...(HandleEventCallbacks), void>::type trigger(Event) {}
 
-            /// trigger is a termination for the template loop.
-            template<std::size_t Index>
-            typename std::enable_if<Index == sizeof...(HandleEventCallbacks), void>::type
-            trigger(Event) {}
-
-            std::tuple<HandleEventCallbacks...> _handleEventCallbacks;
+        std::tuple<HandleEventCallbacks...> _handle_event_callbacks;
     };
 
-    /// make_replicate creates a Replicate from functors.
-    template <typename Event, typename ...HandleEventCallbacks>
-    Replicate<Event, HandleEventCallbacks...> make_replicate(HandleEventCallbacks... handleEventCallbacks) {
-        return Replicate<Event, HandleEventCallbacks...>(std::forward<HandleEventCallbacks>(handleEventCallbacks)...);
+    /// make_replicate creates a replicate from functors.
+    template <typename Event, typename... HandleEventCallbacks>
+    replicate<Event, HandleEventCallbacks...> make_replicate(HandleEventCallbacks... handle_event_callbacks) {
+        return replicate<Event, HandleEventCallbacks...>(std::forward<HandleEventCallbacks>(handle_event_callbacks)...);
     }
 }
