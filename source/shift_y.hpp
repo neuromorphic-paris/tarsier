@@ -10,7 +10,7 @@ namespace tarsier {
     template <typename Event, typename HandleEvent>
     class shift_y {
         public:
-        shift_y(uint16_t height, uint16_t shift, HandleEvent handle_event) :
+        shift_y(uint16_t height, int32_t shift, HandleEvent handle_event) :
             _height(height),
             _shift(shift),
             _handle_event(std::forward<HandleEvent>(handle_event)) {}
@@ -31,13 +31,13 @@ namespace tarsier {
 
         protected:
         const uint16_t _height;
-        const uint16_t _shift;
+        const int32_t _shift;
         HandleEvent _handle_event;
     };
 
     /// make_shift_y creates a shift_y from a functor.
     template <typename Event, typename HandleEvent>
-    shift_y<Event, HandleEvent> make_shift_y(uint16_t height, uint16_t shift, HandleEvent handle_event) {
+    shift_y<Event, HandleEvent> make_shift_y(uint16_t height, int32_t shift, HandleEvent handle_event) {
         return shift_y<Event, HandleEvent>(height, shift, std::forward<HandleEvent>(handle_event));
     }
 }
