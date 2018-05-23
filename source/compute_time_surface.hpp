@@ -22,7 +22,7 @@ namespace tarsier {
             uint16_t width,
             uint16_t height,
             uint64_t temporal_window,
-            double decay,
+            float decay,
             EventToTimeSurface event_to_time_surface,
             HandleTimeSurface handle_time_surface) :
             _width(width),
@@ -42,7 +42,7 @@ namespace tarsier {
         virtual void operator()(Event event) {
             _ts_and_polarities[event.x + event.y * _width] = {event.t, event.polarity};
             const auto t_threshold = (event.t <= _temporal_window ? 0 : event.t - _temporal_window);
-            std::array<std::pair<double, Polarity>, (spatial_window * 2 + 1) * (spatial_window * 2 + 1)>
+            std::array<std::pair<float, Polarity>, (spatial_window * 2 + 1) * (spatial_window * 2 + 1)>
                 projections_and_polarities;
             for (uint16_t y = (event.y <= spatial_window ? 0 : event.y - spatial_window);
                  y <= (event.y >= _height - 1 - spatial_window ? _height - 1 : event.y + spatial_window);
@@ -54,7 +54,7 @@ namespace tarsier {
                     if (t_and_polarity.first > t_threshold) {
                         projections_and_polarities
                             [x + spatial_window - event.x + (y + spatial_window - event.y) * (2 * spatial_window + 1)] =
-                                {std::exp(-static_cast<double>(event.t - t_and_polarity.first) / _decay),
+                                {std::exp(-static_cast<float>(event.t - t_and_polarity.first) / _decay),
                                  t_and_polarity.second};
                     }
                 }
@@ -66,7 +66,7 @@ namespace tarsier {
         const uint16_t _width;
         const uint16_t _height;
         const uint64_t _temporal_window;
-        const double _decay;
+        const float _decay;
         EventToTimeSurface _event_to_time_surface;
         HandleTimeSurface _handle_time_surface;
         std::vector<std::pair<uint64_t, Polarity>> _ts_and_polarities;
@@ -85,7 +85,7 @@ namespace tarsier {
         uint16_t width,
         uint16_t height,
         uint64_t temporal_window,
-        double decay,
+        float decay,
         EventToTimeSurface event_to_time_surface,
         HandleTimeSurface handle_time_surface) {
         return compute_time_surface<

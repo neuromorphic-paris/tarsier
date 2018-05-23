@@ -11,9 +11,9 @@ namespace tarsier {
     class average_position {
         public:
         average_position(
-            double x,
-            double y,
-            double inertia,
+            float x,
+            float y,
+            float inertia,
             EventToPosition EventToposition,
             HandlePosition handle_position) :
             _x(x),
@@ -39,9 +39,9 @@ namespace tarsier {
         }
 
         protected:
-        double _x;
-        double _y;
-        const double _inertia;
+        float _x;
+        float _y;
+        const float _inertia;
         EventToPosition _EventToposition;
         HandlePosition _handle_position;
     };
@@ -49,9 +49,9 @@ namespace tarsier {
     /// make_average_position creates an average_position from functors.
     template <typename Event, typename Position, typename EventToPosition, typename HandlePosition>
     average_position<Event, Position, EventToPosition, HandlePosition> make_average_position(
-        double x,
-        double y,
-        double inertia,
+        float x,
+        float y,
+        float inertia,
         EventToPosition EventToposition,
         HandlePosition handle_position) {
         return average_position<Event, Position, EventToPosition, HandlePosition>(

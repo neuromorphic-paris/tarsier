@@ -1,7 +1,7 @@
 solution 'tarsier'
     configurations {'release', 'debug'}
     location 'build'
-    project 'test'
+    project 'tarsier'
         kind 'ConsoleApp'
         language 'C++'
         location 'build'

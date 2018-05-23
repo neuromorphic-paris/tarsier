@@ -6,7 +6,7 @@ struct event {
 } __attribute__((packed));
 
 TEST_CASE("Shift the x coordinate", "[shift_x]") {
-    auto shift_x = tarsier::make_shift_x<event>(304, 10, [](event event) -> void { REQUIRE(event.x == 210); });
-    shift_x(event{300});
+    auto shift_x = tarsier::make_shift_x<event>(320, 10, [](event event) -> void { REQUIRE(event.x == 210); });
+    shift_x(event{315});
     shift_x(event{200});
 }

@@ -7,8 +7,8 @@ struct event {
 } __attribute__((packed));
 
 struct position {
-    double x;
-    double y;
+    float x;
+    float y;
 } __attribute__((packed));
 
 TEST_CASE("Average the position of the given events", "[average_position]") {
@@ -17,7 +17,7 @@ TEST_CASE("Average the position of the given events", "[average_position]") {
         0.0,
         0.0,
         0.5,
-        [](event event, double x, double y) -> position {
+        [](event event, float x, float y) -> position {
             return {x, y};
         },
         [&](position position) -> void {
