@@ -7,7 +7,7 @@
 
 namespace tarsier {
 
-    /// compute_activity evaluates the activity within a temporal neighborhood
+    /// compute_activity evaluates the activity at each pixel, using an exponential decay.
     template <typename Event, typename Activity, typename EventToActivity, typename HandleActivity>
     class compute_activity {
         public:
