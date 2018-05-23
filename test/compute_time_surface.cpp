@@ -6,22 +6,22 @@ const uint16_t spatial_window = 2;
 const auto projections_size = (2 * spatial_window + 1) * (2 * spatial_window + 1);
 
 struct event {
+    uint64_t t;
     uint16_t x;
     uint16_t y;
-    uint64_t t;
     bool polarity;
 } __attribute__((packed));
 
 struct time_surface {
+    uint64_t t;
     uint16_t x;
     uint16_t y;
-    uint64_t t;
-    std::array<double, projections_size> true_projections;
-    std::array<double, projections_size> false_projections;
+    std::array<float, projections_size> true_projections;
+    std::array<float, projections_size> false_projections;
 } __attribute__((packed));
 
 TEST_CASE("Compute time surfaces from events", "[compute_time_surface]") {
-    time_surface expected_time_surface{100, 100, 2010000};
+    time_surface expected_time_surface{2010000, 100, 100};
     expected_time_surface.true_projections[2] = 0.00033546262790251185;
     expected_time_surface.true_projections[3] = 0.0024787521766663585;
     expected_time_surface.true_projections[7] = 0.018315638888734179;
@@ -33,12 +33,12 @@ TEST_CASE("Compute time surfaces from events", "[compute_time_surface]") {
     expected_time_surface.false_projections[12] = 1.0;
     std::size_t count = 0;
     auto compute_time_surface = tarsier::make_compute_time_surface<event, bool, time_surface, spatial_window>(
-        304,
+        320,
         240,
         10000,
         1000,
-        [](event event, std::array<std::pair<double, bool>, projections_size> projections_and_polarities) {
-            time_surface time_surface{event.x, event.y, event.t};
+        [](event event, std::array<std::pair<float, bool>, projections_size> projections_and_polarities) {
+            time_surface time_surface{event.t, event.x, event.y};
             for (std::size_t index = 0; index < projections_size; ++index) {
                 if (projections_and_polarities[index].second) {
                     time_surface.true_projections[index] = projections_and_polarities[index].first;
@@ -64,14 +64,14 @@ TEST_CASE("Compute time surfaces from events", "[compute_time_surface]") {
                 }
             }
         });
-    compute_time_surface(event{100 - 2, 100 - 2, 2000000, true});
-    compute_time_surface(event{100 - 1, 100 - 2, 2001000, false});
-    compute_time_surface(event{100 - 0, 100 - 2, 2002000, true});
-    compute_time_surface(event{100 - 2, 100 - 1, 2003000, false});
-    compute_time_surface(event{100 + 1, 100 - 2, 2004000, true});
-    compute_time_surface(event{100 - 1, 100 - 1, 2005000, false});
-    compute_time_surface(event{100 - 0, 100 - 1, 2006000, true});
-    compute_time_surface(event{100 - 2, 100 - 0, 2007000, false});
-    compute_time_surface(event{100 + 1, 100 - 1, 2008000, true});
-    compute_time_surface(event{100, 100, 2010000, false});
+    compute_time_surface(event{2000000, 100 - 2, 100 - 2, true});
+    compute_time_surface(event{2001000, 100 - 1, 100 - 2, false});
+    compute_time_surface(event{2002000, 100 - 0, 100 - 2, true});
+    compute_time_surface(event{2003000, 100 - 2, 100 - 1, false});
+    compute_time_surface(event{2004000, 100 + 1, 100 - 2, true});
+    compute_time_surface(event{2005000, 100 - 1, 100 - 1, false});
+    compute_time_surface(event{2006000, 100 - 0, 100 - 1, true});
+    compute_time_surface(event{2007000, 100 - 2, 100 - 0, false});
+    compute_time_surface(event{2008000, 100 + 1, 100 - 1, true});
+    compute_time_surface(event{2010000, 100, 100, false});
 }

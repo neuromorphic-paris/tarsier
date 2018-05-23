@@ -11,13 +11,13 @@ namespace tarsier {
     class track_blob {
         public:
         track_blob(
-            double x,
-            double y,
-            double squared_sigma_x,
-            double sigma_xy,
-            double squared_sigma_y,
-            double position_inertia,
-            double variance_inertia,
+            float x,
+            float y,
+            float squared_sigma_x,
+            float sigma_xy,
+            float squared_sigma_y,
+            float position_inertia,
+            float variance_inertia,
             EventToBlob event_to_blob,
             HandleBlob handle_blob) :
             _x(x),
@@ -41,45 +41,45 @@ namespace tarsier {
             const auto y_delta = event.y - _y;
             _x = _position_inertia * _x + (1 - _position_inertia) * event.x;
             _y = _position_inertia * _y + (1 - _position_inertia) * event.y;
-            _squared_sigma_x = _variance_inertia * _squared_sigma_x + (1 - _variance_inertia) * std::pow(x_delta, 2);
+            _squared_sigma_x = _variance_inertia * _squared_sigma_x + (1 - _variance_inertia) * x_delta * x_delta;
             _sigma_xy = _variance_inertia * _sigma_xy + (1 - _variance_inertia) * x_delta * y_delta;
-            _squared_sigma_y = _variance_inertia * _squared_sigma_y + (1 - _variance_inertia) * std::pow(y_delta, 2);
+            _squared_sigma_y = _variance_inertia * _squared_sigma_y + (1 - _variance_inertia) * y_delta * y_delta;
             _handle_blob(_event_to_blob(event, _x, _y, _squared_sigma_x, _sigma_xy, _squared_sigma_y));
         }
 
         /// x returns the blob's center's x coordinate.
-        double x() const {
+        float x() const {
             return _x;
         }
 
         /// y returns the blob's center's y coordinate.
-        double y() const {
+        float y() const {
             return _y;
         }
 
         /// squared_sigma_x returns the blob's variance along the x axis.
-        double squared_sigma_x() const {
+        float squared_sigma_x() const {
             return _squared_sigma_x;
         }
 
         /// sigma_xy returns the blob's covariance.
-        double sigma_xy() const {
+        float sigma_xy() const {
             return _sigma_xy;
         }
 
         /// squared_sigma_y returns the blob's variance along the y axis.
-        double squared_sigma_y() const {
+        float squared_sigma_y() const {
             return _squared_sigma_y;
         }
 
         protected:
-        double _x;
-        double _y;
-        double _squared_sigma_x;
-        double _sigma_xy;
-        double _squared_sigma_y;
-        const double _position_inertia;
-        const double _variance_inertia;
+        float _x;
+        float _y;
+        float _squared_sigma_x;
+        float _sigma_xy;
+        float _squared_sigma_y;
+        const float _position_inertia;
+        const float _variance_inertia;
         EventToBlob _event_to_blob;
         HandleBlob _handle_blob;
     };
@@ -87,13 +87,13 @@ namespace tarsier {
     /// make_track_blob creates a track_blob from functors.
     template <typename Event, typename Blob, typename EventToBlob, typename HandleBlob>
     track_blob<Event, Blob, EventToBlob, HandleBlob> make_track_blob(
-        double x,
-        double y,
-        double squared_sigma_x,
-        double sigma_xy,
-        double squared_sigma_y,
-        double position_inertia,
-        double variance_inertia,
+        float x,
+        float y,
+        float squared_sigma_x,
+        float sigma_xy,
+        float squared_sigma_y,
+        float position_inertia,
+        float variance_inertia,
         EventToBlob event_to_blob,
         HandleBlob handle_blob) {
         return track_blob<Event, Blob, EventToBlob, HandleBlob>(

@@ -6,6 +6,6 @@ struct event {
 } __attribute__((packed));
 
 TEST_CASE("Invert the x coordinate", "[mirror_x]") {
-    auto mirror_x = tarsier::make_mirror_x<event>(304, [](event event) -> void { REQUIRE(event.x == 100); });
-    mirror_x(event{203});
+    auto mirror_x = tarsier::make_mirror_x<event>(320, [](event event) -> void { REQUIRE(event.x == 100); });
+    mirror_x(event{219});
 }
