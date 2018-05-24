@@ -14,7 +14,7 @@ namespace tarsier {
             float x,
             float y,
             float inertia,
-            EventToPosition EventToposition,
+            EventToPosition event_to_position,
             HandlePosition handle_position) :
             _x(x),
             _y(y),
@@ -35,14 +35,14 @@ namespace tarsier {
         virtual void operator()(Event event) {
             _x = _inertia * _x + (1 - _inertia) * event.x;
             _y = _inertia * _y + (1 - _inertia) * event.y;
-            _handle_position(_EventToposition(event, _x, _y));
+            _handle_position(_event_to_position(event, _x, _y));
         }
 
         protected:
         float _x;
         float _y;
         const float _inertia;
-        EventToPosition _EventToposition;
+        EventToPosition _event_to_position;
         HandlePosition _handle_position;
     };
 
