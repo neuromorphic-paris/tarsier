@@ -88,8 +88,7 @@ namespace tarsier {
                 _handle_flow(_event_to_flow(
                     event,
                     t_determinant * x_determinant * inverse_squares_sum,
-                    t_determinant * y_determinant * inverse_squares_sum
-                ));
+                    t_determinant * y_determinant * inverse_squares_sum));
             }
         }
 
