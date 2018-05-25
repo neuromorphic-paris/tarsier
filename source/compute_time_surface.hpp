@@ -40,7 +40,11 @@ namespace tarsier {
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
-            _ts_and_polarities[event.x + event.y * _width] = {event.t, event.polarity};
+            {
+                const auto index = event.x + event.y * _width;
+                _ts_and_polarities[index].first = event.t;
+                _ts_and_polarities[index].second = event.polarity;
+            }
             const auto t_threshold = (event.t <= _temporal_window ? 0 : event.t - _temporal_window);
             std::array<std::pair<float, Polarity>, (spatial_window * 2 + 1) * (spatial_window * 2 + 1)>
                 projections_and_polarities;
