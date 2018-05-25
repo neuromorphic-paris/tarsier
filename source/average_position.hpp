@@ -19,7 +19,7 @@ namespace tarsier {
             _x(x),
             _y(y),
             _inertia(inertia),
-            _EventToposition(std::forward<EventToPosition>(EventToposition)),
+            _event_to_position(std::forward<EventToPosition>(event_to_position)),
             _handle_position(std::forward<HandlePosition>(handle_position)) {
             if (_inertia < 0 || _inertia > 1) {
                 throw std::logic_error("inertia must be in the range [0, 1]");

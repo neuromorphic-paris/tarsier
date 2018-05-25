@@ -4,39 +4,47 @@ matrix:
     include:
         - os: linux
           dist: trusty
+          compiler: gcc
           sudo: required
+        - os: osx
+          osx_image: xcode9.3
           compiler: gcc
         - os: osx
-          osx_image: xcode8
-          compiler: gcc
-        - os: osx
-          osx_image: xcode8
+          osx_image: xcode9.3
           compiler: clang
 
 before_install:
     - |
-        if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        if [ "$TRAVIS_OS_NAME" = 'osx' ]; then
             brew update
             brew install premake
+            brew install clang-format
         fi
     - |
-        if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        if [ "$TRAVIS_OS_NAME" = 'linux' ]; then
             sudo apt-get -qq update -y
             sudo apt-get install premake4 -y
+            sudo apt-get install clang-format -y
             sudo ln -s /usr/bin/make /usr/bin/gmake
-            sudo chown -R `whoami` /usr/local
         fi
 
-before_script:
-    - premake4 install
-    - premake4 gmake
-
 script:
-    - cd build
-    - make
-    - cd Release
-    - ./tarsierTest
-    - cd ../..
-
-after_script:
-    - premake4 uninstall
+    - |
+        valid=true
+        for filename in source/*.hpp test/*.cpp; do
+            formatted_filename="$(dirname $filename)/formatted_$(basename $filename)"
+            clang-format $filename > $formatted_filename
+            if [ "$(diff $filename $formatted_filename)" != '' ]; then
+                printf "'$filename' is not properly formatted, run \`clang-format -i $filename\`\n"
+                printf "$(diff $filename $formatted_filename)\n"
+                valid=false
+            fi
+            rm $formatted_filename
+        done
+        if [ "$valid" = false ]; then
+            travis_terminate 1
+        fi
+    - premake4 gmake || travis_terminate 1
+    - cd build || travis_terminate 1
+    - make || travis_terminate 1
+    - release/tarsier
