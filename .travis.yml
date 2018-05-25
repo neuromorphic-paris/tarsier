@@ -47,3 +47,4 @@ script:
     - premake4 gmake || travis_terminate 1
     - cd build || travis_terminate 1
     - make || travis_terminate 1
+    - release/tarsier
