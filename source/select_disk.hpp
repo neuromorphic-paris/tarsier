@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cmath>
 #include <utility>
 
 /// tarsier is a collection of event handlers.
@@ -12,7 +11,7 @@ namespace tarsier {
         select_disk(float x, float y, float radius, HandleEvent handle_event) :
             _x(x),
             _y(y),
-            _squared_radius(std::pow(radius, 2)),
+            _squared_radius(radius * radius),
             _handle_event(std::forward<HandleEvent>(handle_event)) {}
         select_disk(const select_disk&) = delete;
         select_disk(select_disk&&) = default;
@@ -22,7 +21,9 @@ namespace tarsier {
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
-            if (std::pow(event.x - _x, 2) + std::pow(event.y - _y, 2) < _squared_radius) {
+            const auto x_delta = event.x - _x;
+            const auto y_delta = event.y - _y;
+            if (x_delta * x_delta + y_delta * y_delta < _squared_radius) {
                 _handle_event(event);
             }
         }

@@ -6,7 +6,7 @@
 /// tarsier is a collection of event handlers.
 namespace tarsier {
 
-    /// select_rectangle propagates only the events within the specified rectangular window.
+    /// select_rectangle propagates only the events within the given rectangular window.
     template <typename Event, typename HandleEvent>
     class select_rectangle {
         public:
