@@ -5,8 +5,8 @@
 #include <utility>
 #include <vector>
 
+/// tarsier is a collection of event handlers.
 namespace tarsier {
-
     /// compute_activity evaluates the activity at each pixel, using an exponential decay.
     template <typename Event, typename Activity, typename EventToActivity, typename HandleActivity>
     class compute_activity {
@@ -47,6 +47,7 @@ namespace tarsier {
         std::vector<std::pair<float, uint64_t>> _potentials_and_ts;
     };
 
+    /// make_compute_activity creates a compute_activity from functors.
     template <typename Event, typename Activity, typename EventToActivity, typename HandleActivity>
     compute_activity<Event, Activity, EventToActivity, HandleActivity> make_compute_activity(
         uint16_t width,

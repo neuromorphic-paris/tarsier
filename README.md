@@ -10,6 +10,7 @@ Within a Git repository, run the commands:
 mkdir -p third_party
 cd third_party
 git submodule add https://github.com/neuromorphic-paris/tarsier.git
+git submodule update --init --recursive
 ```
 
 # User guides and documentation
@@ -38,7 +39,7 @@ premake4 gmake
 cd build
 make
 cd release
-./test
+./tarsier
 ```
 
 After changing the code, format the source files by running from the *tarsier* directory:

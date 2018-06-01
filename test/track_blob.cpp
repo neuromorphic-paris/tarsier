@@ -9,9 +9,9 @@ struct event {
 struct blob {
     float x;
     float y;
-    float squared_sigma_x;
+    float sigma_x_squared;
     float sigma_xy;
-    float squared_sigma_y;
+    float sigma_y_squared;
 } __attribute__((packed));
 
 TEST_CASE("Average the events with a Gaussian blob", "[track_blob]") {
@@ -25,19 +25,19 @@ TEST_CASE("Average the events with a Gaussian blob", "[track_blob]") {
         0.0f,
         0.999f,
         0.999f,
-        [](event event, float x, float y, float squared_sigma_x, float sigma_xy, float squared_sigma_y) -> blob {
-            return {x, y, squared_sigma_x, sigma_xy, squared_sigma_y};
+        [](event event, float x, float y, float sigma_x_squared, float sigma_xy, float sigma_y_squared) -> blob {
+            return {x, y, sigma_x_squared, sigma_xy, sigma_y_squared};
         },
         [&](blob blob) -> void {
             if (first_received) {
                 REQUIRE(std::abs(blob.x - expected_blob.x) / expected_blob.x < 1e-3f);
                 REQUIRE(std::abs(blob.y - expected_blob.y) / expected_blob.y < 1e-3f);
                 REQUIRE(
-                    std::abs(blob.squared_sigma_x - expected_blob.squared_sigma_x) / expected_blob.squared_sigma_x
+                    std::abs(blob.sigma_x_squared - expected_blob.sigma_x_squared) / expected_blob.sigma_x_squared
                     < 1e-3);
                 REQUIRE(std::abs(blob.sigma_xy - expected_blob.sigma_xy) / expected_blob.sigma_xy < 1e-3f);
                 REQUIRE(
-                    std::abs(blob.squared_sigma_y - expected_blob.squared_sigma_y) / expected_blob.squared_sigma_y
+                    std::abs(blob.sigma_y_squared - expected_blob.sigma_y_squared) / expected_blob.sigma_y_squared
                     < 1e-3f);
             } else {
                 first_received = true;
