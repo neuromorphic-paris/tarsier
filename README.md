@@ -21,15 +21,25 @@ User guides and code documentation are held in the [wiki](https://github.com/neu
 
 ## development dependencies
 
-Tarsier relies on [Premake 4.x](https://github.com/premake/premake-4.x) (x ≥ 3) to generate build configurations. Follow these steps to install it:
-- __Debian / Ubuntu__: Open a terminal and execute the command `sudo apt-get install premake4`.
-- __macOS__: Open a terminal and execute the command `brew install premake`. If the command is not found, you need to install Homebrew first with the command<br />
-  `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
+### Debian / Ubuntu
 
-[ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) is used to unify coding styles. Follow these steps to install it:
-- __Debian / Ubuntu__: Open a terminal and execute the command `sudo apt-get install clang-format`.
-- __macOS__: Open a terminal and execute the command `brew install clang-format`. If the command is not found, you need to install Homebrew first with the command<br />
-  `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
+Open a terminal and run:
+```sh
+sudo apt install premake4 # cross-platform build configuration
+sudo apt install clang-format # formatting tool
+```
+
+### macOS
+
+Open a terminal and run:
+```sh
+brew install premake # cross-platform build configuration
+brew install clang-format # formatting tool
+```
+If the command is not found, you need to install Homebrew first with the command:
+```sh
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
 
 ## test
 
