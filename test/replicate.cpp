@@ -2,7 +2,7 @@
 #include "../third_party/Catch2/single_include/catch.hpp"
 
 struct event {
-} __attribute__((packed));
+};
 
 TEST_CASE("Replicate an event and trigger several callbacks", "[replicate]") {
     std::size_t count = 0;

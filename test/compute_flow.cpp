@@ -5,7 +5,7 @@ struct event {
     uint64_t t;
     uint16_t x;
     uint16_t y;
-} __attribute__((packed));
+};
 
 struct flow {
     uint64_t t;
@@ -13,7 +13,7 @@ struct flow {
     uint16_t y;
     float vx;
     float vy;
-} __attribute__((packed));
+};
 
 TEST_CASE("Compute the optical flow from the given events", "[compute_flow]") {
     flow expected_flow{

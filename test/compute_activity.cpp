@@ -5,7 +5,7 @@ struct event {
     uint64_t t;
     uint16_t x;
     uint16_t y;
-} __attribute__((packed));
+};
 
 struct activity {
     uint64_t t;

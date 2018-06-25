@@ -4,7 +4,7 @@
 struct event {
     uint16_t x;
     uint16_t y;
-} __attribute__((packed));
+};
 
 TEST_CASE("Filter out events outside the rectangle", "[select_rectangle]") {
     auto select_rectangle =

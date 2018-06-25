@@ -4,7 +4,7 @@
 struct event {
     uint16_t x;
     uint16_t y;
-} __attribute__((packed));
+};
 
 struct blob {
     float x;
@@ -12,7 +12,7 @@ struct blob {
     float sigma_x_squared;
     float sigma_xy;
     float sigma_y_squared;
-} __attribute__((packed));
+};
 
 TEST_CASE("Average the events with a Gaussian blob", "[track_blob]") {
     blob expected_blob{0.2f, 0.1f, 50.0f, 30.0f, 10.0f};

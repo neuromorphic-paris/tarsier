@@ -25,8 +25,6 @@ solution 'tarsier'
         language 'C++'
         location 'build'
         files {'source/*.hpp', 'test/*.cpp'}
-        buildoptions {'-std=c++11'}
-        linkoptions {'-std=c++11'}
         configuration 'release'
             targetdir 'build/release'
             defines {'NDEBUG'}
@@ -35,3 +33,12 @@ solution 'tarsier'
             targetdir 'build/debug'
             defines {'DEBUG'}
             flags {'Symbols'}
+        configuration 'linux'
+            links {'pthread'}
+            buildoptions {'-std=c++11'}
+            linkoptions {'-std=c++11'}
+        configuration 'macosx'
+            buildoptions {'-std=c++11'}
+            linkoptions {'-std=c++11'}
+        configuration 'windows'
+            files {'.clang-format'}

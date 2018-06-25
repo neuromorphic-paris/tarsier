@@ -10,7 +10,7 @@ struct event {
     uint16_t x;
     uint16_t y;
     bool polarity;
-} __attribute__((packed));
+};
 
 struct time_surface {
     uint64_t t;
@@ -18,7 +18,7 @@ struct time_surface {
     uint16_t y;
     std::array<float, projections_size> true_projections;
     std::array<float, projections_size> false_projections;
-} __attribute__((packed));
+};
 
 TEST_CASE("Compute time surfaces from events", "[compute_time_surface]") {
     time_surface expected_time_surface{2010000, 100, 100};
