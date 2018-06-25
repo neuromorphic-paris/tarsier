@@ -4,12 +4,12 @@
 struct event {
     uint16_t x;
     uint16_t y;
-} __attribute__((packed));
+};
 
 struct position {
     float x;
     float y;
-} __attribute__((packed));
+};
 
 TEST_CASE("Average the position of the given events", "[average_position]") {
     auto first_received = false;

@@ -3,7 +3,7 @@
 
 struct event {
     uint16_t y;
-} __attribute__((packed));
+};
 
 TEST_CASE("Invert the y coordinate", "[mirror_y]") {
     auto mirror_y = tarsier::make_mirror_y<event>(240, [](event event) -> void { REQUIRE(event.y == 100); });

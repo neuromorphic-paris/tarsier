@@ -5,7 +5,7 @@ struct event {
     uint64_t t;
     uint16_t x;
     uint16_t y;
-} __attribute__((packed));
+};
 
 struct activity {
     uint64_t t;
@@ -15,7 +15,7 @@ struct activity {
 };
 
 TEST_CASE("compute the activity from the given events", "[compute_activity]") {
-    std::vector<float> expected_potentials{1.0, 1.9999000049998332, 1.0, 1.9999000049998332, 1.0000908225624412};
+    std::vector<float> expected_potentials{1.0f, 1.9999000049998332f, 1.0f, 1.9999000049998332f, 1.0000908225624412f};
     std::size_t index = 0;
     auto compute_activity = tarsier::make_compute_activity<event, activity>(
         320,

@@ -6,13 +6,13 @@ struct threshold_crossing {
     uint16_t x;
     uint16_t y;
     bool is_second;
-} __attribute__((packed));
+};
 
 struct event {
     uint16_t x;
     uint16_t y;
     uint64_t delta_t;
-} __attribute__((packed));
+};
 
 TEST_CASE("Stitch an threshold crossings stream", "[stitch]") {
     auto stitch = tarsier::make_stitch<threshold_crossing, event>(

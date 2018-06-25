@@ -98,7 +98,7 @@ namespace tarsier {
             float t;
             float x;
             float y;
-        } __attribute__((packed));
+        };
 
         const uint16_t _width;
         const uint16_t _height;

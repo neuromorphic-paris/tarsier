@@ -10,7 +10,7 @@ struct event {
     uint16_t x;
     uint16_t y;
     bool polarity;
-} __attribute__((packed));
+};
 
 struct time_surface {
     uint64_t t;
@@ -18,19 +18,19 @@ struct time_surface {
     uint16_t y;
     std::array<float, projections_size> true_projections;
     std::array<float, projections_size> false_projections;
-} __attribute__((packed));
+};
 
 TEST_CASE("Compute time surfaces from events", "[compute_time_surface]") {
     time_surface expected_time_surface{2010000, 100, 100};
-    expected_time_surface.true_projections[2] = 0.00033546262790251185;
-    expected_time_surface.true_projections[3] = 0.0024787521766663585;
-    expected_time_surface.true_projections[7] = 0.018315638888734179;
-    expected_time_surface.true_projections[8] = 0.1353352832366127;
-    expected_time_surface.false_projections[1] = 0.00012340980408667956;
-    expected_time_surface.false_projections[5] = 0.00091188196555451624;
-    expected_time_surface.false_projections[6] = 0.006737946999085467;
-    expected_time_surface.false_projections[10] = 0.049787068367863944;
-    expected_time_surface.false_projections[12] = 1.0;
+    expected_time_surface.true_projections[2] = 0.00033546262790251185f;
+    expected_time_surface.true_projections[3] = 0.0024787521766663585f;
+    expected_time_surface.true_projections[7] = 0.018315638888734179f;
+    expected_time_surface.true_projections[8] = 0.1353352832366127f;
+    expected_time_surface.false_projections[1] = 0.00012340980408667956f;
+    expected_time_surface.false_projections[5] = 0.00091188196555451624f;
+    expected_time_surface.false_projections[6] = 0.006737946999085467f;
+    expected_time_surface.false_projections[10] = 0.049787068367863944f;
+    expected_time_surface.false_projections[12] = 1.0f;
     std::size_t count = 0;
     auto compute_time_surface = tarsier::make_compute_time_surface<event, bool, time_surface, spatial_window>(
         320,

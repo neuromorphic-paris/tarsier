@@ -3,11 +3,11 @@
 
 struct event {
     bool is_increase;
-} __attribute__((packed));
+};
 
 struct converted_event {
     bool polarity;
-} __attribute__((packed));
+};
 
 TEST_CASE("Convert an event type to another", "[convert]") {
     auto convert = tarsier::make_convert<event>(

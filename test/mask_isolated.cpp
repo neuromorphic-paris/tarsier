@@ -5,7 +5,7 @@ struct event {
     uint64_t t;
     uint16_t x;
     uint16_t y;
-} __attribute__((packed));
+};
 
 TEST_CASE("Filter out events with low spatial or temporal activity", "[mask_isolated]") {
     auto mask_isolated =
