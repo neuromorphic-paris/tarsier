@@ -32,9 +32,7 @@ namespace tarsier {
         virtual void operator()(Event event) {
             auto& potential_and_t = _potentials_and_ts[event.x + event.y * _width];
             potential_and_t.first =
-                potential_and_t.first
-                    * std::exp(-static_cast<float>(event.t - potential_and_t.second) / _decay)
-                + 1;
+                potential_and_t.first * std::exp(-static_cast<float>(event.t - potential_and_t.second) / _decay) + 1;
             potential_and_t.second = event.t;
             _handle_activity(_event_to_activity(event, potential_and_t.first));
         }
