@@ -14,14 +14,14 @@ namespace tarsier {
         compute_activity(
             uint16_t width,
             uint16_t height,
-            uint64_t decay,
+            float decay,
             EventToActivity event_to_activity,
             HandleActivity handle_activity) :
             _width(width),
             _decay(decay),
             _event_to_activity(std::forward<EventToActivity>(event_to_activity)),
             _handle_activity(std::forward<HandleActivity>(handle_activity)),
-            _potentials_and_ts(width * height, {0.0, 0}) {}
+            _potentials_and_ts(width * height, {0.0f, 0}) {}
         compute_activity(const compute_activity&) = delete;
         compute_activity(compute_activity&&) = default;
         compute_activity& operator=(const compute_activity&) = delete;
@@ -33,7 +33,7 @@ namespace tarsier {
             auto& potential_and_t = _potentials_and_ts[event.x + event.y * _width];
             potential_and_t.first =
                 potential_and_t.first
-                    * std::exp(-static_cast<float>(event.t - potential_and_t.second) / static_cast<float>(_decay))
+                    * std::exp(-static_cast<float>(event.t - potential_and_t.second) / _decay)
                 + 1;
             potential_and_t.second = event.t;
             _handle_activity(_event_to_activity(event, potential_and_t.first));
@@ -41,7 +41,7 @@ namespace tarsier {
 
         protected:
         const uint16_t _width;
-        const uint64_t _decay;
+        const float _decay;
         EventToActivity _event_to_activity;
         HandleActivity _handle_activity;
         std::vector<std::pair<float, uint64_t>> _potentials_and_ts;
