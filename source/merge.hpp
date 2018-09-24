@@ -28,7 +28,7 @@ namespace tarsier {
         void push(Event event) {
             while (_accessing_events.test_and_set(std::memory_order_acquire)) {
             }
-            const auto dispatch = _source_to_buffered_events[index].empty() && !_dispatching;
+            const auto dispatch = std::get<Index>(_source_to_buffered_events).empty() && !_dispatching;
             std::get<Index>(_source_to_buffered_events).push_back(event);
             if (dispatch) {
                 _dispatching = true;
