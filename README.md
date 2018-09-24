@@ -55,6 +55,7 @@ copy "%userprofile%\Downloads\premake-4.4-beta5-windows\premake4.exe" "%userprof
 
 To test the library, run from the *tarsier* directory:
 ```sh
+git submodule update --init
 premake4 gmake
 cd build
 make

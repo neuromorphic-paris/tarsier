@@ -6,7 +6,6 @@
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
-
     /// replicate triggers several handlers for each event.
     template <typename Event, typename... HandleEventCallbacks>
     class replicate {

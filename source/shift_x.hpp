@@ -5,7 +5,6 @@
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
-
     /// shift_x translates the x coordinate.
     template <typename Event, typename HandleEvent>
     class shift_x {
