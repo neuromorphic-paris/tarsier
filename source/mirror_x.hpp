@@ -5,7 +5,6 @@
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
-
     /// mirror_x inverts the x coordinate.
     template <typename Event, typename HandleEvent>
     class mirror_x {

@@ -4,7 +4,6 @@
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
-
     /// convert maps a type to another.
     template <typename Event, typename EventToConvertedEvent, typename HandleConvertedEvent>
     class convert {

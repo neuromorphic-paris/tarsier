@@ -6,7 +6,6 @@
 
 /// tarsier is a collection of event handlers.
 namespace tarsier {
-
     /// stitch turns a stream of threshold crossings into a stream of time deltas.
     template <typename ThresholdCrossing, typename Event, typename ThresholdCrossingToEvent, typename HandleEvent>
     class stitch {
