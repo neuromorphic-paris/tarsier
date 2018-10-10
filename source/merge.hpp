@@ -28,7 +28,8 @@ namespace tarsier {
                 auto minimum_t = std::numeric_limits<uint64_t>::max();
                 std::size_t minimum_index = 0;
                 for (std::size_t index = 0; index < Sources; ++index) {
-                    if (!_source_to_buffered_events[index].empty() && _source_to_buffered_events[index].front().t < minimum_t) {
+                    if (!_source_to_buffered_events[index].empty()
+                        && _source_to_buffered_events[index].front().t < minimum_t) {
                         minimum_t = _source_to_buffered_events[index].front().t;
                         minimum_index = index;
                     }

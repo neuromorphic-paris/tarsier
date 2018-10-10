@@ -6,7 +6,11 @@ struct event {
 };
 
 TEST_CASE("Merge two streams", "[merge]") {
-    auto merge = tarsier::make_merge<2, event>([](event event) -> void { REQUIRE(event.t == 0); });
+    std::size_t index = 0;
+    auto merge = tarsier::make_merge<2, event>([&](event event) -> void {
+        REQUIRE(event.t == index);
+        ++index;
+    });
     merge->push<0>(event{1});
     merge->push<1>(event{0});
 }
