@@ -21,7 +21,28 @@ namespace tarsier {
         merge(merge&&) = default;
         merge& operator=(const merge&) = delete;
         merge& operator=(merge&&) = default;
-        virtual ~merge() {}
+        virtual ~merge() {
+            while (_accessing_events.test_and_set(std::memory_order_acquire)) {
+            }
+            for (;;) {
+                auto minimum_t = std::numeric_limits<uint64_t>::max();
+                std::size_t minimum_index = 0;
+                for (std::size_t index = 0; index < Sources; ++index) {
+                    if (!_source_to_buffered_events[index].empty()
+                        && _source_to_buffered_events[index].front().t < minimum_t) {
+                        minimum_t = _source_to_buffered_events[index].front().t;
+                        minimum_index = index;
+                    }
+                }
+                if (minimum_t == std::numeric_limits<uint64_t>::max()) {
+                    break;
+                }
+                auto minimum_event = _source_to_buffered_events[minimum_index].front();
+                _source_to_buffered_events[minimum_index].pop_front();
+                _handle_event(minimum_event);
+            }
+            _accessing_events.clear(std::memory_order_release);
+        }
 
         /// push handles an event from a specified source.
         template <std::size_t Index>
