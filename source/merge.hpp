@@ -70,6 +70,38 @@ namespace tarsier {
         virtual ~merge() {
             _running.store(false, std::memory_order_release);
             _loop.join();
+            std::array<bool, sources> has_events;
+            has_events.fill(true);
+            for (;;) {
+                auto minimum_t = std::numeric_limits<uint64_t>::max();
+                std::size_t minimum_source = 0;
+                for (std::size_t source = 0; source < sources; ++source) {
+                    if (has_events[source]) {
+                        if (_next_events_and_exists[source].second) {
+                            minimum_t = _next_events_and_exists[source].first.t;
+                            minimum_source = source;
+                        } else {
+                            const auto current_head = _fifos[source].head.load(std::memory_order_relaxed);
+                            if (current_head == _fifos[source].tail.load(std::memory_order_acquire)) {
+                                has_events[source] = false;
+                            } else {
+                                _next_events_and_exists[source].first = _fifos[source].events[current_head];
+                                _fifos[source].head.store((current_head + 1) % _fifo_size, std::memory_order_release);
+                                if (_next_events_and_exists[source].first.t < minimum_t) {
+                                    minimum_t = _next_events_and_exists[source].first.t;
+                                    minimum_source = source;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (minimum_t == std::numeric_limits<uint64_t>::max()) {
+                    break;
+                } else {
+                    _handle_event(_next_events_and_exists[minimum_source].first);
+                    _next_events_and_exists[minimum_source].second = false;
+                }
+            }
         }
 
         /// push handles an event from a specified source.
