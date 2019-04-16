@@ -48,7 +48,7 @@ namespace tarsier {
 
     /// make_average_position creates an average_position from functors.
     template <typename Event, typename Position, typename EventToPosition, typename HandlePosition>
-    average_position<Event, Position, EventToPosition, HandlePosition> make_average_position(
+    inline average_position<Event, Position, EventToPosition, HandlePosition> make_average_position(
         float x,
         float y,
         float inertia,

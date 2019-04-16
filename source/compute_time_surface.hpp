@@ -84,7 +84,7 @@ namespace tarsier {
         uint16_t spatial_window,
         typename EventToTimeSurface,
         typename HandleTimeSurface>
-    compute_time_surface<Event, Polarity, TimeSurface, spatial_window, EventToTimeSurface, HandleTimeSurface>
+    inline compute_time_surface<Event, Polarity, TimeSurface, spatial_window, EventToTimeSurface, HandleTimeSurface>
     make_compute_time_surface(
         uint16_t width,
         uint16_t height,

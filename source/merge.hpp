@@ -47,6 +47,7 @@ namespace tarsier {
                             } else {
                                 _next_events_and_exists[source].first = _fifos[source].events[current_head];
                                 _fifos[source].head.store((current_head + 1) % _fifo_size, std::memory_order_release);
+                                _next_events_and_exists[source].second = true;
                                 if (dispatch && _next_events_and_exists[source].first.t < minimum_t) {
                                     minimum_t = _next_events_and_exists[source].first.t;
                                     minimum_source = source;
@@ -87,6 +88,7 @@ namespace tarsier {
                             } else {
                                 _next_events_and_exists[source].first = _fifos[source].events[current_head];
                                 _fifos[source].head.store((current_head + 1) % _fifo_size, std::memory_order_release);
+                                _next_events_and_exists[source].second = true;
                                 if (_next_events_and_exists[source].first.t < minimum_t) {
                                     minimum_t = _next_events_and_exists[source].first.t;
                                     minimum_source = source;
@@ -140,7 +142,7 @@ namespace tarsier {
 
     /// make_merge creates a merge from a functor.
     template <std::size_t sources, typename Event, typename HandleEvent>
-    std::unique_ptr<merge<sources, Event, HandleEvent>> make_merge(
+    inline std::unique_ptr<merge<sources, Event, HandleEvent>> make_merge(
         std::size_t fifo_size,
         std::chrono::high_resolution_clock::duration sleep_duration,
         HandleEvent handle_event) {

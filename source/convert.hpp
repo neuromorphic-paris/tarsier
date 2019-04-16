@@ -30,7 +30,7 @@ namespace tarsier {
 
     /// make_convert creates a convert from functors.
     template <typename Event, typename EventToConvertedEvent, typename HandleConvertedEvent>
-    convert<Event, EventToConvertedEvent, HandleConvertedEvent>
+    inline convert<Event, EventToConvertedEvent, HandleConvertedEvent>
     make_convert(EventToConvertedEvent event_to_converted_event, HandleConvertedEvent handle_converted_event) {
         return convert<Event, EventToConvertedEvent, HandleConvertedEvent>(
             std::forward<EventToConvertedEvent>(event_to_converted_event),

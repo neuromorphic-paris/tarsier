@@ -1,4 +1,4 @@
-![tarsier](banner.png "The Tarsier banner")
+![banner](banner.png)
 
 Tarsier is a collection of tools to build event-based algorithms. It is an header-only library.
 

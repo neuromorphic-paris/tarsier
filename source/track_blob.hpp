@@ -93,7 +93,7 @@ namespace tarsier {
 
     /// make_track_blob creates a track_blob from functors.
     template <typename Event, typename Blob, typename EventToBlob, typename HandleBlob>
-    track_blob<Event, Blob, EventToBlob, HandleBlob> make_track_blob(
+    inline track_blob<Event, Blob, EventToBlob, HandleBlob> make_track_blob(
         float x,
         float y,
         float sigma_x_squared,

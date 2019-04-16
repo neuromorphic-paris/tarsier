@@ -37,7 +37,7 @@ namespace tarsier {
 
     /// make_select_disk creates a select_disk from a functor.
     template <typename Event, typename HandleEvent>
-    select_disk<Event, HandleEvent> make_select_disk(float x, float y, float radius, HandleEvent handle_event) {
+    inline select_disk<Event, HandleEvent> make_select_disk(float x, float y, float radius, HandleEvent handle_event) {
         return select_disk<Event, HandleEvent>(x, y, radius, std::forward<HandleEvent>(handle_event));
     }
 }

@@ -32,7 +32,7 @@ namespace tarsier {
 
     /// make_mirror_x creates a mirror_x from a functor.
     template <typename Event, typename HandleEvent>
-    mirror_x<Event, HandleEvent> make_mirror_x(uint16_t width, HandleEvent handle_event) {
+    inline mirror_x<Event, HandleEvent> make_mirror_x(uint16_t width, HandleEvent handle_event) {
         return mirror_x<Event, HandleEvent>(width, std::forward<HandleEvent>(handle_event));
     }
 }
