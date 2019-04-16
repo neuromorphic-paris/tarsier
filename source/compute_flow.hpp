@@ -112,7 +112,7 @@ namespace tarsier {
 
     /// make_compute_flow creates an optical flow estimator from functors.
     template <typename Event, typename Flow, typename EventToFlow, typename HandleFlow>
-    compute_flow<Event, Flow, EventToFlow, HandleFlow> make_compute_flow(
+    inline compute_flow<Event, Flow, EventToFlow, HandleFlow> make_compute_flow(
         uint16_t width,
         uint16_t height,
         uint16_t spatial_window,

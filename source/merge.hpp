@@ -142,7 +142,7 @@ namespace tarsier {
 
     /// make_merge creates a merge from a functor.
     template <std::size_t sources, typename Event, typename HandleEvent>
-    std::unique_ptr<merge<sources, Event, HandleEvent>> make_merge(
+    inline std::unique_ptr<merge<sources, Event, HandleEvent>> make_merge(
         std::size_t fifo_size,
         std::chrono::high_resolution_clock::duration sleep_duration,
         HandleEvent handle_event) {

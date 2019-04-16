@@ -179,7 +179,7 @@ return function(configuration_filename)
         '    template <', table.concat(template_parameters, ', '), '>\n',
         '    class ', configuration['name'], ' {\n',
         '        public:\n',
-        '        ', configuration['name'], '(', table.concat(parameters, ', ') .. ')')
+        '        ', configuration['name'], '(', table.concat(parameters, ', '), ')')
     if has_initialization_parameters then
         output_file:write(' :\n',
             '            ', table.concat(initialization_parameters, ', '))
@@ -190,7 +190,7 @@ return function(configuration_filename)
         '        ', configuration['name'], '(', configuration['name'], '&&) = default;\n',
         '        ', configuration['name'], '& operator=(const ', configuration['name'], '&) = delete;\n',
         '        ', configuration['name'], '& operator=(', configuration['name'], '&&) = default;\n',
-        '        virtual ~' .. configuration['name'] .. '() {}\n\n',
+        '        virtual ~', configuration['name'], '() {}\n\n',
         '        /// operator() handles an event.\n',
         '        virtual void operator()(', configuration['input']['type'], ' ', configuration['input']['name'], ') {\n',
         '        }\n\n',
@@ -211,9 +211,9 @@ return function(configuration_filename)
     end
     output_file:write(' ', configuration['name'], ' from functors.\n',
         '    template <', table.concat(template_parameters, ', '), '>\n',
-        '    ', configuration['name'] .. '<', table.concat(template_parameters_names, ', '), '> make_', configuration['name'], '(\n',
+        '    inline ', configuration['name'], '<', table.concat(template_parameters_names, ', '), '> make_', configuration['name'], '(\n',
         '        ',  table.concat(parameters, ', '), ') {\n',
-        '        return ', configuration['name'] .. '<', table.concat(template_parameters_names, ', '), '>(\n',
+        '        return ', configuration['name'], '<', table.concat(template_parameters_names, ', '), '>(\n',
         '            ', table.concat(parameters_names, ', '), ');\n',
         '    }\n',
         '}\n')

@@ -37,7 +37,7 @@ namespace tarsier {
 
     /// make_shift_x creates a shift_x from a functor.
     template <typename Event, typename HandleEvent>
-    shift_x<Event, HandleEvent> make_shift_x(uint16_t width, int32_t shift, HandleEvent handle_event) {
+    inline shift_x<Event, HandleEvent> make_shift_x(uint16_t width, int32_t shift, HandleEvent handle_event) {
         return shift_x<Event, HandleEvent>(width, shift, std::forward<HandleEvent>(handle_event));
     }
 }

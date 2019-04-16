@@ -41,7 +41,7 @@ namespace tarsier {
 
     /// make_replicate creates a replicate from functors.
     template <typename Event, typename... HandleEventCallbacks>
-    replicate<Event, HandleEventCallbacks...> make_replicate(HandleEventCallbacks... handle_event_callbacks) {
+    inline replicate<Event, HandleEventCallbacks...> make_replicate(HandleEventCallbacks... handle_event_callbacks) {
         return replicate<Event, HandleEventCallbacks...>(std::forward<HandleEventCallbacks>(handle_event_callbacks)...);
     }
 }

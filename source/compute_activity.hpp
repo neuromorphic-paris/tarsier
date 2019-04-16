@@ -47,7 +47,7 @@ namespace tarsier {
 
     /// make_compute_activity creates a compute_activity from functors.
     template <typename Event, typename Activity, typename EventToActivity, typename HandleActivity>
-    compute_activity<Event, Activity, EventToActivity, HandleActivity> make_compute_activity(
+    inline compute_activity<Event, Activity, EventToActivity, HandleActivity> make_compute_activity(
         uint16_t width,
         uint16_t height,
         float decay,
