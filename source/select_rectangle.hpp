@@ -39,8 +39,12 @@ namespace tarsier {
 
     /// make_select_rectangle creates a select_rectangle from a functor.
     template <typename Event, typename HandleEvent>
-    select_rectangle<Event, HandleEvent>
-    inline make_select_rectangle(uint16_t left, uint16_t bottom, uint16_t width, uint16_t height, HandleEvent handle_event) {
+    select_rectangle<Event, HandleEvent> inline make_select_rectangle(
+        uint16_t left,
+        uint16_t bottom,
+        uint16_t width,
+        uint16_t height,
+        HandleEvent handle_event) {
         return select_rectangle<Event, HandleEvent>(
             left, bottom, width, height, std::forward<HandleEvent>(handle_event));
     }
