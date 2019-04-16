@@ -30,20 +30,15 @@ before_install:
 
 script:
     - |
-        valid=true
         for filename in source/*.hpp test/*.cpp; do
             formatted_filename="$(dirname $filename)/formatted_$(basename $filename)"
             clang-format $filename > $formatted_filename
             if [ "$(diff $filename $formatted_filename)" != '' ]; then
                 printf "'$filename' is not properly formatted, run \`clang-format -i $filename\`\n"
                 printf "$(diff $filename $formatted_filename)\n"
-                valid=false
             fi
             rm $formatted_filename
         done
-        if [ "$valid" = false ]; then
-            travis_terminate 1
-        fi
     - premake4 gmake || travis_terminate 1
     - cd build || travis_terminate 1
     - make || travis_terminate 1
