@@ -170,6 +170,7 @@ return function(configuration_filename)
     end
     output_file:write(
         '#pragma once\n\n',
+        '#include <utility>\n\n',
         '/// tarsier is a collection of event handlers.\n',
         'namespace tarsier {\n')
     for key, value in pairs(configuration['description']) do
