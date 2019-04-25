@@ -20,27 +20,29 @@ namespace tarsier {
         hash& operator=(const hash&) = delete;
         hash& operator=(hash&&) = default;
         virtual ~hash() {
-            if (_shift * sizeof(Uint) > 8) {
-                std::get<1>(_block) *= 0x4cf5ad432745937full;
-                std::get<1>(_block) = rotate(std::get<1>(_block), 33);
-                std::get<1>(_block) *= 0x87c37b91114253d5ull;
-                std::get<1>(_hash) ^= std::get<1>(_block);
+            if (_size > 0 || _shift > 0) {
+                if (_shift * sizeof(Uint) > 8) {
+                    std::get<1>(_block) *= 0x4cf5ad432745937full;
+                    std::get<1>(_block) = rotate(std::get<1>(_block), 33);
+                    std::get<1>(_block) *= 0x87c37b91114253d5ull;
+                    std::get<1>(_hash) ^= std::get<1>(_block);
+                }
+                if (_shift * sizeof(Uint) > 0) {
+                    std::get<0>(_block) *= 0x87c37b91114253d5ull;
+                    std::get<0>(_block) = rotate(std::get<0>(_block), 31);
+                    std::get<0>(_block) *= 0x4cf5ad432745937full;
+                    std::get<0>(_hash) ^= std::get<0>(_block);
+                }
+                std::get<0>(_hash) ^= (_size * 16 + _shift);
+                std::get<1>(_hash) ^= (_size * 16 + _shift);
+                std::get<0>(_hash) += std::get<1>(_hash);
+                std::get<1>(_hash) += std::get<0>(_hash);
+                std::get<0>(_hash) = mix(std::get<0>(_hash));
+                std::get<1>(_hash) = mix(std::get<1>(_hash));
+                std::get<0>(_hash) += std::get<1>(_hash);
+                std::get<1>(_hash) += std::get<0>(_hash);
+                _handle_uint64_pair(_hash);
             }
-            if (_shift * sizeof(Uint) > 0) {
-                std::get<0>(_block) *= 0x87c37b91114253d5ull;
-                std::get<0>(_block) = rotate(std::get<0>(_block), 31);
-                std::get<0>(_block) *= 0x4cf5ad432745937full;
-                std::get<0>(_hash) ^= std::get<0>(_block);
-            }
-            std::get<0>(_hash) ^= (_size * 16 + _shift);
-            std::get<1>(_hash) ^= (_size * 16 + _shift);
-            std::get<0>(_hash) += std::get<1>(_hash);
-            std::get<1>(_hash) += std::get<0>(_hash);
-            std::get<0>(_hash) = mix(std::get<0>(_hash));
-            std::get<1>(_hash) = mix(std::get<1>(_hash));
-            std::get<0>(_hash) += std::get<1>(_hash);
-            std::get<1>(_hash) += std::get<0>(_hash);
-            _handle_uint64_pair(_hash);
         }
 
         /// operator() handles an event.
