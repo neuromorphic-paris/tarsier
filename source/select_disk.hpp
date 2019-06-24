@@ -8,7 +8,7 @@ namespace tarsier {
     template <typename Event, typename HandleEvent>
     class select_disk {
         public:
-        select_disk(float x, float y, float radius, HandleEvent handle_event) :
+        select_disk(float x, float y, float radius, HandleEvent&& handle_event) :
             _x(x),
             _y(y),
             _squared_radius(radius * radius),
@@ -17,7 +17,7 @@ namespace tarsier {
         select_disk(select_disk&&) = default;
         select_disk& operator=(const select_disk&) = delete;
         select_disk& operator=(select_disk&&) = default;
-        virtual ~select_disk() {}
+        virtual ~select_disk() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -37,7 +37,8 @@ namespace tarsier {
 
     /// make_select_disk creates a select_disk from a functor.
     template <typename Event, typename HandleEvent>
-    inline select_disk<Event, HandleEvent> make_select_disk(float x, float y, float radius, HandleEvent handle_event) {
+    inline select_disk<Event, HandleEvent>
+    make_select_disk(float x, float y, float radius, HandleEvent&& handle_event) {
         return select_disk<Event, HandleEvent>(x, y, radius, std::forward<HandleEvent>(handle_event));
     }
 }

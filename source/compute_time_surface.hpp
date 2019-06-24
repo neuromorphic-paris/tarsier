@@ -23,8 +23,8 @@ namespace tarsier {
             uint16_t height,
             uint64_t temporal_window,
             float decay,
-            EventToTimeSurface event_to_time_surface,
-            HandleTimeSurface handle_time_surface) :
+            EventToTimeSurface&& event_to_time_surface,
+            HandleTimeSurface&& handle_time_surface) :
             _width(width),
             _height(height),
             _temporal_window(temporal_window),
@@ -36,7 +36,7 @@ namespace tarsier {
         compute_time_surface(compute_time_surface&&) = default;
         compute_time_surface& operator=(const compute_time_surface&) = delete;
         compute_time_surface& operator=(compute_time_surface&&) = default;
-        virtual ~compute_time_surface() {}
+        virtual ~compute_time_surface() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -90,8 +90,8 @@ namespace tarsier {
         uint16_t height,
         uint64_t temporal_window,
         float decay,
-        EventToTimeSurface event_to_time_surface,
-        HandleTimeSurface handle_time_surface) {
+        EventToTimeSurface&& event_to_time_surface,
+        HandleTimeSurface&& handle_time_surface) {
         return compute_time_surface<
             Event,
             Polarity,

@@ -14,8 +14,8 @@ namespace tarsier {
             float x,
             float y,
             float inertia,
-            EventToPosition event_to_position,
-            HandlePosition handle_position) :
+            EventToPosition&& event_to_position,
+            HandlePosition&& handle_position) :
             _x(x),
             _y(y),
             _inertia(inertia),
@@ -29,7 +29,7 @@ namespace tarsier {
         average_position(average_position&&) = default;
         average_position& operator=(const average_position&) = delete;
         average_position& operator=(average_position&&) = default;
-        virtual ~average_position() {}
+        virtual ~average_position() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -52,8 +52,8 @@ namespace tarsier {
         float x,
         float y,
         float inertia,
-        EventToPosition EventToposition,
-        HandlePosition handle_position) {
+        EventToPosition&& EventToposition,
+        HandlePosition&& handle_position) {
         return average_position<Event, Position, EventToPosition, HandlePosition>(
             x,
             y,

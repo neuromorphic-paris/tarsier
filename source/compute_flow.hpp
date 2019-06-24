@@ -17,8 +17,8 @@ namespace tarsier {
             uint16_t spatial_window,
             uint64_t temporal_window,
             std::size_t minimum_number_of_events,
-            EventToFlow event_to_flow,
-            HandleFlow handle_flow) :
+            EventToFlow&& event_to_flow,
+            HandleFlow&& handle_flow) :
             _width(width),
             _height(height),
             _spatial_window(spatial_window),
@@ -31,7 +31,7 @@ namespace tarsier {
         compute_flow(compute_flow&&) = default;
         compute_flow& operator=(const compute_flow&) = delete;
         compute_flow& operator=(compute_flow&&) = default;
-        virtual ~compute_flow() {}
+        virtual ~compute_flow() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -118,8 +118,8 @@ namespace tarsier {
         uint16_t spatial_window,
         uint64_t temporal_window,
         std::size_t minimum_number_of_events,
-        EventToFlow EventToflow,
-        HandleFlow handle_flow) {
+        EventToFlow&& EventToflow,
+        HandleFlow&& handle_flow) {
         return compute_flow<Event, Flow, EventToFlow, HandleFlow>(
             width,
             height,

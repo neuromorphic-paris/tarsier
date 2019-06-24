@@ -9,7 +9,7 @@ namespace tarsier {
     template <typename Uint, typename HandleUint64Pair>
     class hash {
         public:
-        hash(HandleUint64Pair handle_uint64_pair) :
+        hash(HandleUint64Pair&& handle_uint64_pair) :
             _handle_uint64_pair(std::forward<HandleUint64Pair>(handle_uint64_pair)),
             _shift(0),
             _block(0, 0),
@@ -102,7 +102,7 @@ namespace tarsier {
 
     /// make_hash creates a hash from functors.
     template <typename Uint, typename HandleUint64Pair>
-    inline hash<Uint, HandleUint64Pair> make_hash(HandleUint64Pair handle_uint64_pair) {
+    inline hash<Uint, HandleUint64Pair> make_hash(HandleUint64Pair&& handle_uint64_pair) {
         return hash<Uint, HandleUint64Pair>(std::forward<HandleUint64Pair>(handle_uint64_pair));
     }
 }

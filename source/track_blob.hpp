@@ -18,8 +18,8 @@ namespace tarsier {
             float sigma_y_squared,
             float position_inertia,
             float variance_inertia,
-            EventToBlob event_to_blob,
-            HandleBlob handle_blob) :
+            EventToBlob&& event_to_blob,
+            HandleBlob&& handle_blob) :
             _x(x),
             _y(y),
             _sigma_x_squared(sigma_x_squared),
@@ -40,7 +40,7 @@ namespace tarsier {
         track_blob(track_blob&&) = default;
         track_blob& operator=(const track_blob&) = delete;
         track_blob& operator=(track_blob&&) = default;
-        virtual ~track_blob() {}
+        virtual ~track_blob() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -101,8 +101,8 @@ namespace tarsier {
         float sigma_y_squared,
         float position_inertia,
         float variance_inertia,
-        EventToBlob event_to_blob,
-        HandleBlob handle_blob) {
+        EventToBlob&& event_to_blob,
+        HandleBlob&& handle_blob) {
         return track_blob<Event, Blob, EventToBlob, HandleBlob>(
             x,
             y,

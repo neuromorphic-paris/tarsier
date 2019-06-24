@@ -143,10 +143,11 @@ return function(configuration_filename)
     local parameters = {}
     local parameters_names = {}
     for index, parameter in ipairs(configuration['parameters']) do
-        parameters[index] = parameter['type'] .. ' ' .. parameter['name']
         if parameter['store'] == 'forward' then
+            parameters[index] = parameter['type'] .. '&& ' .. parameter['name']
             parameters_names[index] = 'std::forward<' .. parameter['type'] .. '>(' .. parameter['name'] .. ')'
         else
+            parameters[index] = parameter['type'] .. ' ' .. parameter['name']
             parameters_names[index] = parameter['name']
         end
     end
