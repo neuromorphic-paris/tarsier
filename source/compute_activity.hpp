@@ -15,8 +15,8 @@ namespace tarsier {
             uint16_t width,
             uint16_t height,
             float decay,
-            EventToActivity event_to_activity,
-            HandleActivity handle_activity) :
+            EventToActivity&& event_to_activity,
+            HandleActivity&& handle_activity) :
             _width(width),
             _decay(decay),
             _event_to_activity(std::forward<EventToActivity>(event_to_activity)),
@@ -26,7 +26,7 @@ namespace tarsier {
         compute_activity(compute_activity&&) = default;
         compute_activity& operator=(const compute_activity&) = delete;
         compute_activity& operator=(compute_activity&&) = default;
-        virtual ~compute_activity() {}
+        virtual ~compute_activity() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -51,8 +51,8 @@ namespace tarsier {
         uint16_t width,
         uint16_t height,
         float decay,
-        EventToActivity event_to_activity,
-        HandleActivity handle_activity) {
+        EventToActivity&& event_to_activity,
+        HandleActivity&& handle_activity) {
         return compute_activity<Event, Activity, EventToActivity, HandleActivity>(
             width,
             height,

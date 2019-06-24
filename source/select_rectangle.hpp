@@ -10,7 +10,7 @@ namespace tarsier {
     template <typename Event, typename HandleEvent>
     class select_rectangle {
         public:
-        select_rectangle(uint16_t left, uint16_t bottom, uint16_t width, uint16_t height, HandleEvent handle_event) :
+        select_rectangle(uint16_t left, uint16_t bottom, uint16_t width, uint16_t height, HandleEvent&& handle_event) :
             _left(left),
             _bottom(bottom),
             _right(left + width),
@@ -20,7 +20,7 @@ namespace tarsier {
         select_rectangle(select_rectangle&&) = default;
         select_rectangle& operator=(const select_rectangle&) = delete;
         select_rectangle& operator=(select_rectangle&&) = default;
-        virtual ~select_rectangle() {}
+        virtual ~select_rectangle() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -44,7 +44,7 @@ namespace tarsier {
         uint16_t bottom,
         uint16_t width,
         uint16_t height,
-        HandleEvent handle_event) {
+        HandleEvent&& handle_event) {
         return select_rectangle<Event, HandleEvent>(
             left, bottom, width, height, std::forward<HandleEvent>(handle_event));
     }

@@ -19,7 +19,7 @@ namespace tarsier {
         merge(
             std::size_t fifo_size,
             std::chrono::high_resolution_clock::duration sleep_duration,
-            HandleEvent handle_event) :
+            HandleEvent&& handle_event) :
             _fifo_size(fifo_size),
             _sleep_duration(sleep_duration),
             _handle_event(std::forward<HandleEvent>(handle_event)),
@@ -145,7 +145,7 @@ namespace tarsier {
     inline std::unique_ptr<merge<sources, Event, HandleEvent>> make_merge(
         std::size_t fifo_size,
         std::chrono::high_resolution_clock::duration sleep_duration,
-        HandleEvent handle_event) {
+        HandleEvent&& handle_event) {
         return std::unique_ptr<merge<sources, Event, HandleEvent>>(
             new merge<sources, Event, HandleEvent>(fifo_size, sleep_duration, std::forward<HandleEvent>(handle_event)));
     }

@@ -10,7 +10,7 @@ namespace tarsier {
     template <typename Event, typename HandleEvent>
     class shift_y {
         public:
-        shift_y(uint16_t height, int32_t shift, HandleEvent handle_event) :
+        shift_y(uint16_t height, int32_t shift, HandleEvent&& handle_event) :
             _height(height),
             _shift(shift),
             _handle_event(std::forward<HandleEvent>(handle_event)) {}
@@ -18,7 +18,7 @@ namespace tarsier {
         shift_y(shift_y&&) = default;
         shift_y& operator=(const shift_y&) = delete;
         shift_y& operator=(shift_y&&) = default;
-        virtual ~shift_y() {}
+        virtual ~shift_y() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -37,7 +37,7 @@ namespace tarsier {
 
     /// make_shift_y creates a shift_y from a functor.
     template <typename Event, typename HandleEvent>
-    inline shift_y<Event, HandleEvent> make_shift_y(uint16_t height, int32_t shift, HandleEvent handle_event) {
+    inline shift_y<Event, HandleEvent> make_shift_y(uint16_t height, int32_t shift, HandleEvent&& handle_event) {
         return shift_y<Event, HandleEvent>(height, shift, std::forward<HandleEvent>(handle_event));
     }
 }

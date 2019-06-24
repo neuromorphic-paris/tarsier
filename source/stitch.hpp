@@ -14,8 +14,8 @@ namespace tarsier {
         stitch(
             uint16_t width,
             uint16_t height,
-            ThresholdCrossingToEvent threshold_crossing_to_event,
-            HandleEvent handle_event) :
+            ThresholdCrossingToEvent&& threshold_crossing_to_event,
+            HandleEvent&& handle_event) :
             _width(width),
             _height(height),
             _threshold_crossing_to_event(std::forward<ThresholdCrossingToEvent>(threshold_crossing_to_event)),
@@ -25,7 +25,7 @@ namespace tarsier {
         stitch(stitch&&) = default;
         stitch& operator=(const stitch&) = delete;
         stitch& operator=(stitch&&) = default;
-        virtual ~stitch() {}
+        virtual ~stitch() = default;
 
         /// operator() handles a threshold crossing.
         virtual void operator()(ThresholdCrossing threshold_crossing) {
@@ -59,8 +59,8 @@ namespace tarsier {
     inline stitch<ThresholdCrossing, Event, ThresholdCrossingToEvent, HandleEvent> make_stitch(
         uint16_t width,
         uint16_t height,
-        ThresholdCrossingToEvent threshold_crossing_to_event,
-        HandleEvent handle_event) {
+        ThresholdCrossingToEvent&& threshold_crossing_to_event,
+        HandleEvent&& handle_event) {
         return stitch<ThresholdCrossing, Event, ThresholdCrossingToEvent, HandleEvent>(
             width,
             height,

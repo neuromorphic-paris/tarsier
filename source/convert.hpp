@@ -9,14 +9,14 @@ namespace tarsier {
     template <typename Event, typename EventToConvertedEvent, typename HandleConvertedEvent>
     class convert {
         public:
-        convert(EventToConvertedEvent event_to_converted_event, HandleConvertedEvent handle_converted_event) :
+        convert(EventToConvertedEvent&& event_to_converted_event, HandleConvertedEvent&& handle_converted_event) :
             _event_to_converted_event(std::forward<EventToConvertedEvent>(event_to_converted_event)),
             _handle_converted_event(std::forward<HandleConvertedEvent>(handle_converted_event)) {}
         convert(const convert&) = delete;
         convert(convert&&) = default;
         convert& operator=(const convert&) = delete;
         convert& operator=(convert&&) = default;
-        virtual ~convert() {}
+        virtual ~convert() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -31,7 +31,7 @@ namespace tarsier {
     /// make_convert creates a convert from functors.
     template <typename Event, typename EventToConvertedEvent, typename HandleConvertedEvent>
     inline convert<Event, EventToConvertedEvent, HandleConvertedEvent>
-    make_convert(EventToConvertedEvent event_to_converted_event, HandleConvertedEvent handle_converted_event) {
+    make_convert(EventToConvertedEvent&& event_to_converted_event, HandleConvertedEvent&& handle_converted_event) {
         return convert<Event, EventToConvertedEvent, HandleConvertedEvent>(
             std::forward<EventToConvertedEvent>(event_to_converted_event),
             std::forward<HandleConvertedEvent>(handle_converted_event));

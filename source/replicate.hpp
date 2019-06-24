@@ -11,13 +11,13 @@ namespace tarsier {
     template <typename Event, typename... HandleEventCallbacks>
     class replicate {
         public:
-        replicate(HandleEventCallbacks... handle_event_callbacks) :
+        replicate(HandleEventCallbacks&&... handle_event_callbacks) :
             _handle_event_callbacks(std::forward<HandleEventCallbacks>(handle_event_callbacks)...) {}
         replicate(const replicate&) = delete;
         replicate(replicate&&) = default;
         replicate& operator=(const replicate&) = delete;
         replicate& operator=(replicate&&) = default;
-        virtual ~replicate() {}
+        virtual ~replicate() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -41,7 +41,7 @@ namespace tarsier {
 
     /// make_replicate creates a replicate from functors.
     template <typename Event, typename... HandleEventCallbacks>
-    inline replicate<Event, HandleEventCallbacks...> make_replicate(HandleEventCallbacks... handle_event_callbacks) {
+    inline replicate<Event, HandleEventCallbacks...> make_replicate(HandleEventCallbacks&&... handle_event_callbacks) {
         return replicate<Event, HandleEventCallbacks...>(std::forward<HandleEventCallbacks>(handle_event_callbacks)...);
     }
 }

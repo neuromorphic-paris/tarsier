@@ -11,7 +11,7 @@ namespace tarsier {
     template <typename Event, typename HandleEvent>
     class mask_isolated {
         public:
-        mask_isolated(uint16_t width, uint16_t height, uint64_t temporal_window, HandleEvent handle_event) :
+        mask_isolated(uint16_t width, uint16_t height, uint64_t temporal_window, HandleEvent&& handle_event) :
             _width(width),
             _height(height),
             _temporal_window(temporal_window),
@@ -21,7 +21,7 @@ namespace tarsier {
         mask_isolated(mask_isolated&&) = default;
         mask_isolated& operator=(const mask_isolated&) = delete;
         mask_isolated& operator=(mask_isolated&&) = default;
-        virtual ~mask_isolated() {}
+        virtual ~mask_isolated() = default;
 
         /// operator() handles an event.
         virtual void operator()(Event event) {
@@ -45,7 +45,7 @@ namespace tarsier {
     /// make_mask_isolated creates a mask_isolated from a functor.
     template <typename Event, typename HandleEvent>
     inline mask_isolated<Event, HandleEvent>
-    make_mask_isolated(uint16_t width, uint16_t height, uint64_t temporal_window, HandleEvent handle_event) {
+    make_mask_isolated(uint16_t width, uint16_t height, uint64_t temporal_window, HandleEvent&& handle_event) {
         return mask_isolated<Event, HandleEvent>(
             width, height, temporal_window, std::forward<HandleEvent>(handle_event));
     }
