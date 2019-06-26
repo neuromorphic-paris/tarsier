@@ -7,7 +7,8 @@
 /// tarsier is a collection of event handlers.
 namespace tarsier {
 
-    /// mask_isolated propagates only events that are not isolated spatially or temporally.
+    /// mask_isolated propagates only events that are not isolated spatially or
+    /// temporally.
     template <typename Event, typename HandleEvent>
     class mask_isolated {
         public:

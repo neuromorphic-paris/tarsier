@@ -27,7 +27,7 @@ namespace tarsier {
         /// operator() handles an event.
         virtual void operator()(Event event) {
             auto index = (event.x + event.y * _width) * 2 + (event.is_increase ? 1 : 0);
-            if (_ts[index] < event.t - _duration){
+            if (_ts[index] < event.t - _duration) {
                 _ts[index] = event.t;
                 _handle_event(event);
             }
@@ -43,12 +43,8 @@ namespace tarsier {
 
     /// make_mask_redundant creates a mask_redundant from a functor.
     template <typename Event, typename HandleEvent>
-    mask_redundant<Event, HandleEvent> make_mask_redundant(uint16_t width, uint16_t height, uint64_t duration, HandleEvent handle_event) {
-        return mask_redundant<Event, HandleEvent>(
-                width, 
-                height, 
-                duration, 
-                std::forward<HandleEvent>(handle_event)
-        );
+    mask_redundant<Event, HandleEvent>
+    make_mask_redundant(uint16_t width, uint16_t height, uint64_t duration, HandleEvent handle_event) {
+        return mask_redundant<Event, HandleEvent>(width, height, duration, std::forward<HandleEvent>(handle_event));
     }
 }
