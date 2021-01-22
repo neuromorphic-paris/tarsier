@@ -117,7 +117,7 @@ return function(configuration_filename)
             and value['store'] ~= 'mutable'
             and value['store'] ~= 'constant'
             and value['store'] ~= 'forward' then
-            error(name .. '[\'store\'] must be one of {\'mutable\', \'constant\', \'forward\'}')
+            error(name .. '[\'store\'] must be one of {\'no\', \'mutable\', \'constant\', \'forward\'}')
         end
     end
     check(
@@ -152,12 +152,13 @@ return function(configuration_filename)
         end
     end
     local initialization_parameters = {}
+    local initialization_parameters_index = 1
     local has_initialization_parameters = false
     for index, parameter in ipairs(configuration['parameters']) do
         if parameter['store'] ~= 'no' then
             has_initialization_parameters = true
             if parameter['store'] == 'forward' then
-                initialization_parameters[index] = '_' ..
+                initialization_parameters[initialization_parameters_index] = '_' ..
                     parameter['name'] ..
                     '(std::forward<' ..
                     parameter['type'] ..
@@ -165,8 +166,9 @@ return function(configuration_filename)
                     parameter['name'] ..
                     '))'
             else
-                initialization_parameters[index] = '_' .. parameter['name'] .. '(' .. parameter['name'] .. ')'
+                initialization_parameters[initialization_parameters_index] = '_' .. parameter['name'] .. '(' .. parameter['name'] .. ')'
             end
+            initialization_parameters_index = initialization_parameters_index + 1
         end
     end
     output_file:write(
